@@ -1,0 +1,24 @@
+
+/**
+ * @file
+ * Basic styling for the Payment card module.
+ */
+
+/**
+ * Add styles to credit card form elements.
+ */
+.payment-credit-card-start,
+.payment-credit-card-expiration {
+  margin-bottom: 1em;
+}
+
+.payment-credit-card-start .form-item,
+.payment-credit-card-expiration .form-item {
+  display: inline;
+  margin-right: .25em;
+  margin-bottom: 1em;
+}
+
+.payment-month-year-divider {
+  margin-right: 3px;
+}

@@ -1,0 +1,51 @@
+<?php
+
+function jcode_update_zipcode_menu() {
+  $items = array();
+  $items['csv-update'] = array(
+    'page callback' => '_csv_update',
+    'access callback' => False,
+  );
+  return $items;
+}
+
+/**
+ * Csv update
+ */
+function _csv_update() {
+//$query = db_delete('zipcode')
+//      ->execute();
+
+
+  $row = 1;
+  $path = drupal_get_path('module', 'jcode_update_zipcode');
+  $path .= "/us_postal_codes.csv";
+  
+  if (($handle = fopen($path, "r")) !== FALSE) {
+
+    $query = db_insert('zipcode')->fields(array('zip', 'city', 'state'));
+    while (($data = fgetcsv($handle, 10000, ",")) !== FALSE) {
+
+      if ($row == 1) {
+        $row++;
+        continue;
+      }
+
+      $datanew = array($data[0], $data[1], $data[2]);
+
+      $query->values($datanew);
+    }
+
+    $query->execute();
+    fclose($handle);
+  }
+//  $query = db_select('zipcode', 'n')
+//      ->fields('n', array('zip', 'city', 'state'))
+//      ->execute();
+//  while ($record = $query->fetchAssoc()) {
+//    print"<pre>working<br>";
+//    print_r($record);
+//  }
+//
+//  exit;
+}

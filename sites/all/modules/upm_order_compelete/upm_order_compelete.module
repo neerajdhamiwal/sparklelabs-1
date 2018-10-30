@@ -1,0 +1,245 @@
+<?php
+/**
+ * Implements hook_block_info().
+ */
+function upm_order_compelete_block_info() {
+    $blocks = array();
+
+    $blocks['gift_review'] = array(
+        'info' => t('Gift Review'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['cart_content_review'] = array(
+        'info' => t('Cart Content Review'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['shipping_review'] = array(
+        'info' => t('Shipping Address'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['billing_review'] = array(
+        'info' => t('Billing Address'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['shipping_method_review'] = array(
+        'info' => t('Shipping Method'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['payment_method_review'] = array(
+        'info' => t('Payment Method'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function upm_order_compelete_block_view($delta='')
+{
+    $block = array();
+    switch ($delta) {
+        case 'gift_review':
+            $block['subject'] = t('Gift options');
+            $block['content'] = review_gift_block();
+            break;
+        case 'cart_content_review':
+            $block['subject'] = t('Summary');
+            $block['content'] = review_cart_content_block();
+            break;
+        case 'shipping_review':
+            $block['subject'] = t('Shipping Address');
+            $block['content'] = shipping_review_block();
+            break;
+        case 'billing_review':
+            $block['subject'] = t('Billing Address');
+            $block['content'] = billing_review_block();
+            break;
+        case 'shipping_method_review':
+            $block['subject'] = t('Shipping Method');
+            $block['content'] = shipping_method_review_block();
+            break;
+        case 'payment_method_review':
+            $block['subject'] = t('Payment Method');
+            $block['content'] = payment_method_review_block();
+            break;
+    }
+    return $block;
+}
+
+function review_gift_block(){
+    $order_id = arg(1);
+    $html = '';
+    if(is_numeric($order_id)){
+       $order = commerce_order_load($order_id);
+        if(isset($order->field_gift_price['und'])){
+            $html .= '<p>Its a Gift.</p>';
+            $html .= '<p>Gift receipt and message:</p>';
+            $html .='<p class="gift-msg">'. $order->field_gift_message['und'][0]['value'].'</p>';
+        }
+    }
+
+    return $html;
+}
+
+function review_cart_content_block(){
+    $order_id = arg(1);
+    $html = '';
+    if(is_numeric($order_id)){
+        $html = views_embed_view('commerce_cart_summary', 'default', $order_id);
+    }
+    $panes = commerce_checkout_panes();
+    $coupon_pane = $panes['commerce_coupon'];
+    require_once drupal_get_path('module', $coupon_pane['module']) . '/' . $coupon_pane['file'];
+    $order = commerce_order_load($order_id); 
+    $coupon_form = drupal_get_form('upm_order_compelete_coupon_pane', $order, '2');
+   $html .= drupal_render($coupon_form);
+    return $html;
+}
+
+function shipping_review_block(){
+    $order_id = arg(1);
+    $html = '';
+    if(is_numeric($order_id)){
+        $order = commerce_order_load($order_id);
+        $shipping_id = $order->commerce_customer_shipping['und'][0]['profile_id'];
+        $ship_address = commerce_customer_profile_load($shipping_id);
+
+        $ship_name = (isset($ship_address->field_title['und'][0]['value']))?$ship_address->field_title['und'][0]['value'].' ':'';
+        $ship_name .= (isset($ship_address->commerce_customer_address['und'][0]['name_line']))?$ship_address->commerce_customer_address['und'][0]['name_line']:'';
+        $ship_street = (isset($ship_address->commerce_customer_address['und'][0]['thoroughfare']))?$ship_address->commerce_customer_address['und'][0]['thoroughfare']:'';
+        $ship_city = (isset($ship_address->commerce_customer_address['und'][0]['locality']))?$ship_address->commerce_customer_address['und'][0]['locality'].', ':'';
+        $ship_city .= (isset($ship_address->commerce_customer_address['und'][0]['administrative_area']))?$ship_address->commerce_customer_address['und'][0]['administrative_area'].' ':'';
+        $ship_city .= (isset($ship_address->commerce_customer_address['und'][0]['postal_code']))?$ship_address->commerce_customer_address['und'][0]['postal_code']:'';
+        $ship_country = (isset($ship_address->commerce_customer_address['und'][0]['country']))?$ship_address->commerce_customer_address['und'][0]['country']:'';
+
+        $html ='<p style="margin: 0px;">'.$ship_name.'</p>
+        	    <p style="margin: 0px;">'.$ship_street.'</p>
+        	    <p style="margin: 0px;">'.$ship_city.'</p>
+        	    <p style="margin: 0px;">'.$ship_country.'</p>';
+
+    }
+    return $html;
+}
+
+function billing_review_block(){
+    $order_id = arg(1);
+    $html = '';
+    if(is_numeric($order_id)){
+        $order = commerce_order_load($order_id);
+        $billing_id = $order->commerce_customer_billing['und'][0]['profile_id'];
+        $bill_address = commerce_customer_profile_load($billing_id);
+
+        $bill_name = (isset($bill_address->field_title['und'][0]['value']))?$bill_address->field_title['und'][0]['value'].' ':'';
+        $bill_name .= (isset($bill_address->commerce_customer_address['und'][0]['name_line']))?$bill_address->commerce_customer_address['und'][0]['name_line']:'';
+        $bill_street = (isset($bill_address->commerce_customer_address['und'][0]['thoroughfare']))?$bill_address->commerce_customer_address['und'][0]['thoroughfare']:'';
+        $bill_city = (isset($bill_address->commerce_customer_address['und'][0]['locality']))?$bill_address->commerce_customer_address['und'][0]['locality'].', ':'';
+        $bill_city .= (isset($bill_address->commerce_customer_address['und'][0]['administrative_area']))?$bill_address->commerce_customer_address['und'][0]['administrative_area'].' ':'';
+        $bill_city .= (isset($bill_address->commerce_customer_address['und'][0]['postal_code']))?$bill_address->commerce_customer_address['und'][0]['postal_code']:'';
+        $bill_country = (isset($bill_address->commerce_customer_address['und'][0]['country']))?$bill_address->commerce_customer_address['und'][0]['country']:'';
+
+        $html ='<p style="margin: 0px;">'.$bill_name.'</p>
+        	    <p style="margin: 0px;">'.$bill_street.'</p>
+        	    <p style="margin: 0px;">'.$bill_city.'</p>
+        	    <p style="margin: 0px;">'.$bill_country.'</p>';
+    }
+
+    return $html;
+}
+function shipping_method_review_block(){
+    $order_id = arg(1);
+    $html = '';
+    if(is_numeric($order_id)){
+        $order_wrapper = commerce_order_load($order_id);
+        // Get the line items. Shipping service is a line item (like product, discount etc)
+        $shipping = upm_commerce_shipping_line_item_exists($order_wrapper);
+        if($shipping){
+            $slected = db_select('shipping_options', 's')
+                ->fields('s' , array('id','label','rate','type'))
+                ->condition('id', $shipping)
+                ->execute()
+                ->fetchAssoc();
+            $html = $slected['label'];
+        }
+    }
+
+    return $html;
+}
+function payment_method_review_block(){
+    $order_id = arg(1);
+    $html = '<div>';
+    if(is_numeric($order_id)){
+        $order = commerce_order_load($order_id);
+        $r = explode('|', $order->data['payment_method']);
+	//print_r($order); die; 
+        if (count($r) > 1){
+            $rule = rules_config_load($r[1]);
+            $html .= $rule->label;
+        }
+    }
+   $html .= '<a href="/checkout"><div class="order-edit">Edit</div></a>'; 
+   $html .= '</div>';
+   $html .= '<div class="order-place btn"></div>'; 
+   return $html;
+}
+
+/**
+ * Coupon cart pane callback
+ */
+function upm_order_compelete_coupon_pane($form, $form_state, $cart_order, $pane_weight) {
+  $form_pane = array();
+
+  $form_pane['coupon'] = array(
+    '#type' => 'container',
+    '#weight' => $pane_weight,
+    '#prefix' => '<div class="commerce_coupon">',
+    '#suffix' => '</div>',
+  );
+  $form_pane['coupon']['coupon_code'] = array(
+    '#type' => 'textfield',   
+    '#title' => t('Promotional Code'),
+    '#description' => t('Enter your coupon code here.'), 
+    '#size' => 16,
+  );
+  $form_pane['coupon']['coupon_add'] = array(
+    '#type' => 'submit',
+    '#value' => t('Apply'),
+    '#submit' => array('upm_order_compelete_add_form_submit'),
+  );
+  
+  // If there's at least one coupon has been attached to an order
+  if (isset($cart_order->commerce_coupons) && !empty($cart_order->commerce_coupons)) {    
+    // take a view table from commerce_coupon module
+    module_load_include('inc', 'commerce_coupon', 'includes/commerce_coupon.checkout_pane');
+    $table = commerce_coupon_pane_review(NULL, NULL, NULL, $cart_order);
+    $form_pane['coupon']['coupons_table'] = array(
+      '#type' => 'markup',
+      '#markup' => $table,      
+    );   
+  } 
+
+  return $form_pane;
+}
+
+/**
+ * Coupon form handler that is used on Cart form. Add coupon to order.
+ */
+function upm_order_compelete_add_form_submit($form, &$form_state) {
+  $order = $form_state['build_info']['args'][0];
+
+  $error = '';
+  if ($code = $form_state['values']['coupon_code']) {
+    if ($coupon = commerce_coupon_redeem_coupon_code($code, $order, $error)) {
+      // add posibility to react on attachment a coupon to an order            
+      module_invoke_all('commerce_cpc_coupon_attached', $order, $coupon);      
+      drupal_set_message(t('Coupon code applied'));
+    } else {
+      drupal_set_message($error, 'error');
+      return;
+    }
+  }
+
+  $form_state['no_redirect'] = FALSE;
+  return ;
+}
+

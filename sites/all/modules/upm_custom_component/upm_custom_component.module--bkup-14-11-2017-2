@@ -1,0 +1,462 @@
+<?php
+
+/**
+ * Implements hook_commerce_checkout_pane_info()
+ */
+function upm_custom_component_commerce_checkout_pane_info() {
+    $panes['my_module'] = array(
+        'title' => t('Customer Information'),
+        'page' => 'checkout',
+        'weight' => -20,
+        'file' => 'includes/my_module.checkout_pane.inc',
+        'base' => 'my_module_pane',
+    );
+    return $panes;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function upm_custom_component_menu() {
+    $items['custom-newsletter'] = array(
+        'title' => 'Custom page',
+        'page callback' => 'newsletter_custom',
+        'access arguments' => array('access content'),
+    );
+    // Zipcode lookup
+    $items['zipcode/autocomplete'] = array(
+        'title' => 'zipcode autocomplete',
+        'page callback' => 'zipcode_autocomplete',
+        'access arguments' => array('access content')
+    );
+    $items['sendmail'] = array(
+        'title' => '',
+        'page callback' => 'sendmail_custom',
+        'access arguments' => array('access content'),
+    );
+    return $items;
+}
+function zipcode_autocomplete() {
+    $string = $_POST['zipcode'];
+    if ($string) {
+        $result = db_select('zipcode')
+            ->fields('zipcode', array('zip', 'city', 'state'))
+            ->condition('zip', $string)
+            ->range(0, 1)->execute()->fetch();
+    }
+    echo drupal_json_output($result);
+}
+
+function sendmail_custom(){
+     $from = $_POST['from'];
+     $to = $_POST['to'];
+     $subject = $_POST['subject'];
+    $page_title = $_POST['page_title'];
+    $page_url = $_POST['page_url'];
+    $img_url = $POST['img_url'];
+    $page_desc = $POST['page_desc'];
+    $message = $page_title.'is shared with you.<br />Use this link to Access this Page '.$page_url.'<br />';
+    $message .= '<b><h4>' . $page_title . '</h4></b>';
+    $message .= $page_desc;
+    $message .= '<img src="' . $img_url . '" alt="Smiley face" height="42" width="42">';
+    $message .= $_POST['message'];
+
+    simple_mail_send($from, $to, $subject, $message);
+}
+
+function newsletter_custom(){
+   $email = $_POST['email'];
+   $type = (isset($_POST['type']))?$_POST['type'] : 1;
+    simplenews_subscribe_user($email, $type, TRUE);
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function upm_custom_component_block_info() {
+    $blocks = array();
+
+    $blocks['spk_custom_block1'] = array(
+        'info' => t('First form'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['spk_custom_block2'] = array(
+        'info' => t('Second form'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['spk_custom_learn_views'] = array(
+        'info' => t('Learn Views'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['spk_custom_footer_menu'] = array(
+        'info' => t('Footer menus'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['spk_custom_custom_pager_view'] = array(
+        'info' => t('Custom pager'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['custom_referer'] = array(
+        'info' => t('Referrer'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function upm_custom_component_block_view($delta = '') {
+    $block = array();
+    switch ($delta) {
+        case 'spk_custom_block1':
+            $block['subject'] = t('Be an insider!');
+            $block['content'] = spk_custom_block_content(1);
+            break;
+        case 'spk_custom_block2':
+            $block['subject'] = t('Stay in Touch');
+            $block['content'] = spk_custom_block_content(2);
+            break;
+        case 'spk_custom_footer_menu':
+            $block['subject'] = t('');
+            $block['content'] = spk_custom_block_content(3);
+            break;
+        case 'spk_custom_learn_views':
+            $block['subject'] = t('');
+            $block['content'] = spk_custom_block_content(4);
+            break;
+        case 'spk_custom_custom_pager_view':
+            $block['subject'] = t('');
+            $block['content'] = spk_custom_block_content(5);
+            break;
+        case 'custom_referer':
+            $block['subject'] = t('');
+            $block['content'] = custom_referer_content();
+            break;
+    }
+    return $block;
+}
+function custom_referer_content(){
+    $referrer = $_SERVER['HTTP_REFERER'];
+    $current = $_SERVER['REQUEST_URI'];
+    $link ='<a class="ref" href="/">Back to Home</a>';
+    if(strpos( $current, 'product/' ) !== false  && strpos( $referrer, 'node/15' ) !== false || strpos( $referrer, 'content/shop' ) !== false ) {
+        $link ='<a class="ref" href="/content/shop">Back to Shop</a>';
+    }
+    else if(strpos( $current, 'learn_items/')  !== false  ) {
+        if (strpos( $referrer, '/product/' ) !== false)
+            $link ='<a class="ref" href="'.$referrer.'">Back to Product</a>';
+        else
+            $link ='<a class="ref" href="/choose-a-kit">Back to Learn</a>';
+    }
+    else if(strpos( $current, 'blog/')  !== false ) {
+        $link ='<a class="ref" href="/blogs">Back to Blogs</a>';
+    }
+    else if(strpos( $current, 'projects' ) !== false && strpos( $referrer, 'content/lab')  !== false || strpos( $referrer, 'node/15' ) !== false)  {
+        $link ='<a class="ref" href="/content/lab">Back to Lab</a>';
+    }
+    else if(strpos( $current, 'checkout' ) !== false || strpos( $current, 'cart' ) !== false)  {
+        $link ='<a class="ref" href="/content/shop">Back to Shop</a>';
+    }
+    if(strpos( $current, 'node/15' ) !== false || strpos( $current, 'content/shop')  !== false )  {
+        $link ='<a class="ref" href="/">Back to Home</a>';
+    }
+
+    return $link;
+    //return "".print_r($_SERVER)."";
+}
+function spk_custom_block_content($key){
+    $block1 = module_invoke('menu', 'block_view', 'menu-products');
+    $block2 = module_invoke('menu', 'block_view', 'menu-educators');
+    $block3 = module_invoke('menu', 'block_view', 'menu-sparkle-labs');
+    $block4 = module_invoke('menu', 'block_view', 'menu-contact');
+
+
+
+    $html = '';
+    if($key == 1){
+        $html .= '<form id="spk-custom-form1"><div><p>New Kits, Projects, Events and Sale!</p><div id="msg-newsletter"></div>';
+        $html .= '<input placeholder="Enter your email address" class="" id="newsletter-email1" name="email" size="60" maxlength="128" type="text">';
+        $html .='<input type="submit" id="newsletter-submit1" name="op" value="Stay Connected!" class="btn btn-default form-submit" /></div></form>';
+    }else if($key == 2){
+        $html .= '<form id="spk-custom-form2"><div><div id="img-newsletter"></div>';
+        $html .= '<input placeholder="you@youremail.com" class="" id="newsletter-email2" name="email" value="" size="60" maxlength="128" type="text">';
+        $html .= '<input type="submit" id="newsletter-submit2" name="op" value="Stay Connected!" class="btn btn-default form-submit" /><div id="msg-newsletter"></div></div></form>';
+    }
+    else if($key == 3){
+        $html .= '<div class=" p-0">';
+        $html .= '<div class="col-sm-7 p-0">';
+        $html .= '<div class="col-sm-4 p-0">';
+        $html .= '<h2 class="block-title">Contact</h2>';
+        $html .= render($block4['content']);
+        $html .= '</div>';
+        $html .= '<div class="col-sm-4 p-0">';
+        $html .= '<h2 class="block-title">Sparkle Labs</h2>';
+        $html .= render($block3['content']);
+        $html .= '</div>';
+        $html .= '<div class="col-sm-4 p-0">';
+        $html .= '<h2 class="block-title">Educators</h2>';
+        $html .= render($block2['content']);
+        $html .= '</div>';
+        $html .= '</div>';
+        $html .= '<div class="col-sm-5 p-0">';
+        $html .= '<h2 class="block-title">Products</h2>';
+        $html .= render($block1['content']);
+        $html .= '</div>';
+        $html .= '</div>';
+    }
+    else if($key == 4){
+
+        $html .= '<div id="block-views-projects-view-block">';
+        $view = views_get_view('projects_view');
+        $view->preview('block', array(arg(1)));
+        if (!empty($view->result)) {
+            $html .= '<h2 class="block-title">Additional Projects</h2>';
+            $html .= '<div class="view-content">';
+            $html .=  views_embed_view('projects_view', 'block', arg(1));
+            $html .= '</div>';
+        }
+        $html .= '</div><div id="block-views-teacher-aids-view-block">';
+        $view = views_get_view('teacher_aids_view');
+        $view->preview('block', array(arg(1)));
+        if (!empty($view->result)) {
+            $html .= '<h2 class="block-title">Teaching Aids</h2>';
+            $html .= '<div class="view-content">';
+            $html .= views_embed_view('teacher_aids_view', 'block', arg(1));
+            $html .= '</div>';
+        }
+        $html .= '</div>';
+
+    }
+    else if($key == 5){
+        $node = node_load(arg(1));
+        $html .= '<div id="block-pager">';
+        if($node->type == 'lesson'){
+            $parent = $node->field_lesson_parent_product['und'][0]['nid'];
+
+            $html .=  views_embed_view('lesson_pager', 'block_1', arg(1), $parent);
+            $html .=  views_embed_view('pager_left', 'block_1', arg(1), $parent);
+        }
+        elseif ($node->type == 'learn_projects'){
+            $parent = $node->field_project_parent_product['und'][0]['nid'];
+            $html .=  views_embed_view('lesson_pager', 'block_2', arg(1), $parent);
+            $html .=  views_embed_view('pager_left', 'block_2', arg(1), $parent);
+        }
+
+        $html .= '</div>';
+    }
+    return $html;
+}
+/**
+ * Override or insert variables into the node templates.
+ *
+ * @param $variables
+ *   An array of variables to pass to the theme template.
+ * @param $hook
+ *   The name of the template being rendered ("node" in this case.)
+ */
+
+function upm_custom_component_preprocess_node(&$variables, $hook) {
+//Gather the available vars for the node
+    $node = &$variables['node'];
+    if($node->type == 'product'){
+        if($node->field_product_type['und'][0]['value'] == 'Kits'){
+            $pid = $node->field_product_reference['und'][0]['product_id'];
+            $content = (node_view($node, 'full', NULL));
+            $variables['cart'] = $content['field_product_reference'];
+        }else{
+            $pid = $node->field_add_ons_accessories_refere['und'][0]['product_id'];
+            $content = (node_view($node, 'full', NULL));
+            $variables['cart'] = $content['field_add_ons_accessories_refere'];
+        }
+        $product = commerce_product_load($pid);
+        $price = commerce_product_calculate_sell_price($product);
+        if(isset($price['data']['components'][2]['name']) && $price['data']['components'][2]['name'] == 'discount') {
+            $variables['price_sale'] = commerce_currency_format($price['amount'], $price['currency_code'], $product);
+            $variables['price_original'] = commerce_currency_format($price['original']['amount'], $price['original']['currency_code'], $product);
+        }else{
+            $variables['price_original'] = commerce_currency_format($price['data']['components'][0]['price']['amount'], $price['data']['components'][0]['price']['currency_code'], $product);
+        }
+
+
+
+    }
+}
+
+function upm_custom_component_node_insert($node)
+{
+    if ($node->type == 'lesson' || $node->type == 'learn_projects' || $node->type == 'teaching_aids') {
+        if ($node->type == 'lesson') {
+            $check = (isset($node->field_send_lesson_update['und'][0]['value']))?$node->field_send_lesson_update['und'][0]['value']:'no';
+            $parent_id = $node->field_lesson_parent_product['und'][0]['nid'];
+
+            $view = views_get_view('lesson_counter');
+            $print_view = $view->preview('block', array($parent_id));
+            if(!empty(count($view->result))){
+                $node->field_child_no_lesson['und'][0]['value'] = count($view->result);
+            }
+
+        } else if ($node->type == 'learn_projects') {
+            $check = (isset($node->field_send_project_update['und'][0]['value']))?$node->field_send_project_update['und'][0]['value']:'no';
+            $parent_id = $node->field_project_parent_product['und'][0]['nid'];
+            $view = views_get_view('project__counter');
+            $print_view = $view->preview('block', array($parent_id));
+            if(!empty(count($view->result))){
+                $node->field_child_no_project['und'][0]['value'] = count($view->result);
+            }
+        } else if ($node->type == 'teaching_aids') {
+            $check = (isset($node->field_send_teaching_aids_update['und'][0]['value']))?$node->field_send_teaching_aids_update['und'][0]['value']:'no';
+        }
+
+        if($check == 'yes') {
+            if ($node->type == 'lesson') {
+                $parent_id = $node->field_lesson_parent_product['und'][0]['nid'];
+                $custom_field = 'field_lesson_image';
+                $counter_field = 'field_lesson_mail_send_counter';
+            } else if ($node->type == 'learn_projects') {
+                $parent_id = $node->field_project_parent_product['und'][0]['nid'];
+                $custom_field = 'field_learn_project_image‎';
+                $counter_field = 'field_project_mail_send_counter';
+            } else if ($node->type == 'teaching_aids') {
+                $parent_id = $node->field_teaching_aids_parent_produ['und'][0]['nid'];
+                $custom_field = 'field_teaching_aids_image';
+                $counter_field = 'field_teaching_aids_mail_send_co';
+            }
+            $node->{$counter_field}['und'][0]['value'] = $node->{$counter_field}['und'][0]['value'] + 1 ;
+                $pnode = node_load($parent_id);
+                $term = taxonomy_get_term_by_name($pnode->title, 'newsletter');
+                $term = key($term);
+                if(empty(simplenews_category_load($term))){
+                    $simplenews_taxonomy_id = $term;
+                    $category = new stdClass();
+                    $category->tid = $simplenews_taxonomy_id;
+                    $category->format = 'html';
+                    $category->priority = 0;
+                    $category->receipt = 0;
+                    $category->from_name = variable_get('site_name', '');
+                    $category->email_subject = "[" . "node:title" . "]";
+                    $category->from_address = variable_get('site_mail', '');
+                    $category->hyperlinks = 1;
+                    $category->new_account = 'off';
+                    $category->opt_inout = 'double';
+                    $category->block = 1;
+                    $category->name = '';
+                    $category->description = '';
+                    $category->$simplenews_taxonomy_id = $simplenews_taxonomy_id;
+                    simplenews_category_save($category);
+                }
+                $newnode = new stdClass();
+                $newnode->type = 'simplenews';
+                node_object_prepare($newnode);
+                $newnode->language = LANGUAGE_NONE;
+                $newnode->uid = 1;
+                $newnode->title = $node->title;
+                $newnode->body['und'][0]['value'] = $node->body['und'][0]['value'];
+                $newnode->field_simplenews_term['und'][0]['tid'] = $term;
+                $newnode->field_newsletter_image['und'][0] = $node->{$custom_field}['und'][0];
+                node_save($newnode);
+            module_load_include('inc', 'simplenews', 'includes/simplenews.mail');
+            simplenews_add_node_to_spool($newnode);
+            simplenews_mail_spool();
+        }
+
+    }
+}
+function upm_custom_component_node_update($node)
+{
+    if ($node->type == 'lesson' || $node->type == 'learn_projects' || $node->type == 'teaching_aids') {
+        if ($node->type == 'lesson') {
+            $check = (isset($node->field_send_lesson_update['und'][0]['value']))?$node->field_send_lesson_update['und'][0]['value']:'no';
+        } else if ($node->type == 'learn_projects') {
+            $check = (isset($node->field_send_project_update['und'][0]['value']))?$node->field_send_project_update['und'][0]['value']:'no';
+        } else if ($node->type == 'teaching_aids') {
+            $check = (isset($node->field_send_teaching_aids_update['und'][0]['value']))?$node->field_send_teaching_aids_update['und'][0]['value']:'no';
+        }
+
+        if($check == 'yes') {
+            if ($node->type == 'lesson') {
+                $parent_id = $node->field_lesson_parent_product['und'][0]['nid'];
+                $custom_field = 'field_lesson_image';
+                $counter_field = 'field_lesson_mail_send_counter';
+            } else if ($node->type == 'learn_projects') {
+                $parent_id = $node->field_project_parent_product['und'][0]['nid'];
+                $custom_field = 'field_learn_project_image‎';
+                $counter_field = 'field_project_mail_send_counter';
+            } else if ($node->type == 'teaching_aids') {
+                $parent_id = $node->field_teaching_aids_parent_produ['und'][0]['nid'];
+                $custom_field = 'field_teaching_aids_image';
+                $counter_field = 'field_teaching_aids_mail_send_co';
+            }
+            $node->{$counter_field}['und'][0]['value'] = $node->{$counter_field}['und'][0]['value'] + 1 ;
+            $pnode = node_load($parent_id);
+            $term = taxonomy_get_term_by_name($pnode->title, 'newsletter');
+            $term = key($term);
+            if(empty(simplenews_category_load($term))){
+                $simplenews_taxonomy_id = $term;
+                $category = new stdClass();
+                $category->tid = $simplenews_taxonomy_id;
+                $category->format = 'html';
+                $category->priority = 0;
+                $category->receipt = 0;
+                $category->from_name = variable_get('site_name', '');
+                $category->email_subject = "[" . "node:title" . "]";
+                $category->from_address = variable_get('site_mail', '');
+                $category->hyperlinks = 1;
+                $category->new_account = 'off';
+                $category->opt_inout = 'double';
+                $category->block = 1;
+                $category->name = '';
+                $category->description = '';
+                $category->$simplenews_taxonomy_id = $simplenews_taxonomy_id;
+                simplenews_category_save($category);
+            }
+            $newnode = new stdClass();
+            $newnode->type = 'simplenews';
+            node_object_prepare($newnode);
+            $newnode->language = LANGUAGE_NONE;
+            $newnode->uid = 1;
+            $newnode->title = $node->title;
+            $newnode->body['und'][0]['value'] = $node->body['und'][0]['value'];
+            $newnode->field_simplenews_term['und'][0]['tid'] = $term;
+            $newnode->field_newsletter_image['und'][0] = $node->{$custom_field}['und'][0];
+            node_save($newnode);
+            module_load_include('inc', 'simplenews', 'includes/simplenews.mail');
+            simplenews_add_node_to_spool($newnode);
+            simplenews_mail_spool();
+        }
+
+    }
+}
+function upm_custom_component_form_node_form_alter(&$form,&$form_state,$form_id)
+{
+    if($form['#node']->type=="lesson"){
+        $form['field_lesson_mail_send_counter']['#disabled'] = TRUE;
+        $form['field_child_no_lesson']['#disabled'] = TRUE;
+    }
+    elseif ($form['#node']->type=="learn_projects"){
+        $form['field_project_mail_send_counter']['#disabled'] = TRUE;
+        $form['field_child_no_project']['#disabled'] = TRUE;
+    }
+    elseif ($form['#node']->type=="teaching_aids"){
+        $form['field_teaching_aids_mail_send_co']['#disabled'] = TRUE;
+    }
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function upm_custom_component_node_access($node, $op, $account) {
+
+    // Checks for an invoice node in view mode.
+    if (is_object($node) && $node->type === 'invoice') {
+
+        // Grants permission to node if the current user has administrator role
+        if (in_array('administrator',$account->roles)) {
+            return NODE_ACCESS_ALLOW;
+        }
+        // Otherwise disallows access to view the node.
+        return NODE_ACCESS_DENY;
+    }
+    // For all other nodes and other view modes, don't affect the access.
+    return NODE_ACCESS_IGNORE;
+}

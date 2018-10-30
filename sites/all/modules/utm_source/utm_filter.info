@@ -1,0 +1,11 @@
+name = Simplenews utm_* filter
+description = Google Analytics URL builder filter for Simplenews
+package = Simplenews
+core = 7.x
+
+; Information added by Drupal.org packaging script on 2014-08-06
+version = "7.x-1.0-alpha2"
+core = "7.x"
+project = "utm_source"
+datestamp = "1407361129"
+

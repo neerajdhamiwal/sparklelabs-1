@@ -1,0 +1,127 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function jcode_cart_shipping_menu() {
+  $items['jcode-test'] = array(
+    'title' => 'Test page',
+    'page callback' => 'jcode_set_shipping',
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function jcode_cart_shipping_block_info() {
+  $blocks = array();
+  $blocks['custom_shipping_block'] = array(
+    'info' => t('Custom Block shipping'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function jcode_cart_shipping_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'custom_shipping_block' :
+      $block['content'] = jcode_cart_shipping_block_content();
+      break;
+  }
+  return $block;
+}
+
+function jcode_cart_shipping_block_content() {
+  return drupal_get_form('shipping_custom_form');
+}
+
+function shipping_custom_form($form, &$form_state) {
+  $form = array();
+  $form['shipping_custom_form_my'] = array(
+    '#name' => 'block_shipping',
+    '#type' => 'select',
+    '#description' => t('Select an shipping type.'),
+    '#options' => array(t('Expedited'), t('Overnight'), t('Standard'))
+  );
+  return $form;
+}
+
+/* set shipping */
+
+function jcode_set_shipping() {
+  global $user;
+  $orders = commerce_cart_order_load($user->uid);
+  $line_item_id = $orders->commerce_line_items['und'][0]['line_item_id'];
+  $line_item = commerce_line_item_load($line_item_id);
+  $product_id = $line_item->commerce_product['und']['0']['product_id'];
+  $product = commerce_product_load($product_id);
+
+//  jcode_cart_shipping_commerce_shipping_collect_rates($orders);
+
+  $method = "flat_rate";
+  commerce_shipping_method_collect_rates($method, $orders);
+
+  $service = "standard";
+  commerce_shipping_service_rate_order($service, $orders);
+
+//  $query = new EntityFieldQuery;
+//
+//  $query->entityCondition('entity_type', 'node', '=')
+//      ->propertyCondition('type', 'product_variation')
+//      ->fieldCondition('field_product', 'product_id', $product_id, '=')
+//      ->range(0, 1);
+//
+//  if ($result = $query->execute()) {
+//    $nid;
+//    foreach ($result['node'] as $key => $value) {
+//      $nid = $key;
+//    }
+//
+//    $node = node_load($nid);
+//
+//    $tid = $node->field_filter['und']['0']['tid'];
+//    return $tid;
+//  }
+//  $testpa = drupal_get_path('module', 'commerce_shipping') . '/includes/commerce_shipping.checkout_pane.inc';
+//  include $testpa;
+//  
+//  $test1 = drupal_get_form('commerce_shipping_pane_checkout');
+//  print_r($test1);
+//  exit;
+
+  return "working";
+}
+
+/**/
+
+function jcode_cart_shipping_form_commerce_checkout_form_alter($form, &$form_state, $form_id) {
+ $form['commerce_shipping']['shipping_service']['#default_value'] ="standard";
+  
+//  print "function execute<pre>";
+//  print_r($form);
+//  exit;
+
+}
+//
+//function my_module_fu() {
+//  print "wo <pre>";
+//  
+//  exit;
+//}
+//function jcode_cart_shipping_commerce_shipping_collect_rates($order) {
+//  // No example.
+//}
+//function jcode_cart_shipping_commerce_shipping_method_collect_rates($method, $order) {
+//  // No example.
+//  print "function execute";
+//  print_r($order);
+//  exit;
+//}

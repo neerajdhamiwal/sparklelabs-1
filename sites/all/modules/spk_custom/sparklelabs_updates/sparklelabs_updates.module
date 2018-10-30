@@ -1,0 +1,345 @@
+<?php
+/**
+ * Impliments hook_menu()
+ */
+module_load_include('module', 'upm_commerce_tax', 'upm_commerce_tax');
+module_load_include('inc', 'upm_commerce_tax', 'upm_commerce_tax.rules');
+module_load_include('inc', 'upm_commerce_shipping', 'upm_commerce_shipping_checkout_pane');
+module_load_include('inc', 'upm_commerce_shipping', 'upm_commerce_shipping.rules');
+function sparklelabs_updates_menu() {
+  $items['cart/autoupdate'] = array(
+    'page callback' => 'cart_autoupdate_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['checkout/giftupdate'] = array(
+    'page callback' => 'checkout_giftupdate_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['checkout/shipupdate'] = array(
+    'page callback' => 'checkout_shipupdate_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['checkout/msgupdate'] = array(
+    'page callback' => 'checkout_msgupdate_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['checkout/zipupdate'] = array(
+    'page callback' => 'checkout_zipupdate_callback',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  
+  return $items;
+}
+
+function cart_autoupdate_callback(){
+	$lineitemid = $_GET['lineitemid'];
+	$qty = $_GET['qty'];
+	$order_id = $_GET['orderid'];
+	$order = commerce_order_load($order_id);
+
+	$lineItemObj = commerce_line_item_load($lineitemid);
+  $lineItemObj->quantity = $qty;
+	commerce_line_item_save($lineItemObj);
+  $new_subtotal = 0;
+  $new_itemtotal = 0;
+  $currency_code = $order->commerce_order_total['und'][0]['currency_code'];
+  foreach ($order->commerce_line_items['und'] as $key => $value) {
+  	$lineItemObj = commerce_line_item_load($value['line_item_id']);
+  	if($lineItemObj->type == 'product'){
+  		$new_subtotal += $lineItemObj->commerce_total['und'][0]['amount'];
+  		if($lineItemObj->line_item_id == $lineitemid){
+  			$new_itemtotal = $lineItemObj->commerce_total['und'][0]['amount'];
+  		}
+  	}
+  }
+  $order->commerce_order_total['und'][0]['data']['components'][0]['price']['amount'] = $new_subtotal;
+  commerce_order_save($order);
+  $result = array('item_price' => commerce_currency_format($new_itemtotal, $currency_code, $object = NULL, $convert = TRUE), 'subtotal_price' => commerce_currency_format($new_subtotal, $currency_code, $object = NULL, $convert = TRUE));	
+  echo json_encode($result); 
+}
+
+function checkout_giftupdate_callback(){
+  $oid = $_GET['orderid'];
+  $giftwrap_decision = $_GET['gwdecision'];
+  $is_price = $_GET['isprice'];
+  $message = $_GET['msg'];
+  $order = commerce_order_load($oid);
+  upm_commerce_giftwrap_delete_giftwrap_line_items($order);
+  if ($giftwrap_decision) {
+      $order->field_gift_price['und'][0]['value']=($is_price == 'price')?'Wrap':'Free';
+      $order->field_gift_message['und'][0]['value']= $message;
+      if($is_price == 'price' ) {
+          // Set the currency code.
+          $default_currency_code=commerce_default_currency();
+          if ($balance=commerce_payment_order_balance($order)) {
+              $default_currency_code=$balance['currency_code'];
+          }
+          $quantity_count=0;
+          $order_wrapper=entity_metadata_wrapper('commerce_order', $order);
+          foreach ($order_wrapper->commerce_line_items as $delta=>$line_item_wrapper) {
+              if ($line_item_wrapper->type->value() == 'product') {
+                  $quantity_count+=$line_item_wrapper->quantity->value();
+              }
+          }
+          // Create the new line item.
+          $line_item=commerce_line_item_new('giftwrap', $order->order_id);
+          // Wrap the line item and order to simplify manipulating their field data.
+          $order_wrapper=entity_metadata_wrapper('commerce_order', $order);
+          $line_item_wrapper=entity_metadata_wrapper('commerce_line_item', $line_item);
+          // Populate the $line_item_wrapper...
+          $line_item_wrapper->line_item_label=t('Gift Wrapping');
+          $line_item_wrapper->quantity=1;
+          $line_item_wrapper->commerce_unit_price->amount=$quantity_count * variable_get('commerce_giftwrap_price', '300');
+          $line_item_wrapper->commerce_unit_price->currency_code=$default_currency_code;
+          // Set the price component of the unit price.
+          $line_item_wrapper->commerce_unit_price->data=commerce_price_component_add(
+              $line_item_wrapper->commerce_unit_price->value(),
+              'giftwrap',
+              $line_item_wrapper->commerce_unit_price->value(),
+              TRUE,
+              FALSE
+          );
+          // Invoke the 'commerce_giftwrap_calculate' event.
+          rules_invoke_all('commerce_giftwrap_calculate', $line_item);
+          // Save the incoming line item now so we get its ID.
+          commerce_line_item_save($line_item);
+          // Add it to the order's line item reference value.
+          $order_wrapper->commerce_line_items[]=$line_item;
+          // Save the order.
+      }
+    commerce_order_save($order);
+  }elseif (!$giftwrap_decision) {
+    // If the user selects 'No' check if giftwrapping has been added, if so
+    // delete it.
+      unset($order->field_gift_price['und']);
+      unset($order->field_gift_message['und']);
+  }
+  echo '';
+  //echo "<pre>";print_r($order);echo "</prE>";
+  //echo $oid.' : '.$giftwrap_decision.' : '.$is_price;
+}
+
+function checkout_shipupdate_callback(){
+  $oid = $_GET['orderid'];
+  $order = commerce_order_load($oid);
+  $shipping_id = $_GET['shipid'];
+  $profile_id = $order->commerce_customer_shipping['und'][0]['profile_id'];
+  $profile = commerce_customer_profile_load($profile_id);
+  $country = $profile->commerce_customer_address['und'][0]['country'];
+  //$shipping_id = 1;
+  //Shipping id if set to International options No sales taxes needs to be calculated.
+  if($shipping_id == 4 || $shipping_id == 5){
+    upm_commerce_delete_tax_line_items($order);
+  }
+  upm_commerce_delete_tax_line_items($order);
+  if($country == 'US'){
+      //$shipping_id = $form_state['values']['commerce_shipping_rates']['commerce_shipping_option'];
+      //$order->field_shipping_type['und'][0]['value'] = 'local';
+      $order->field_shipping_id['und'][0]['value'] = $shipping_id;
+      if($profile->commerce_customer_address['und'][0]['administrative_area'] == 'NJ'){
+          add_tax($order);
+      }
+  }else{
+      //$shipping_id = $form_state['values']['commerce_shipping_rates']['commerce_inter_shipping_option'];
+      //$order->field_shipping_type['und'][0]['value'] = 'inter';
+      $order->field_shipping_id['und'][0]['value'] = $shipping_id;
+  }
+  $slected = db_select('shipping_options', 's')
+        ->fields('s' , array('id','label','rate','type'))
+        ->condition('id', $shipping_id)
+        ->execute()
+        ->fetchAssoc();
+  $shipping_label = $slected['label'];
+  $shipping_price = $slected['rate'];
+  $machine_readable = strtolower($shipping_label);
+  $machine_readable = preg_replace('@[^a-z0-9_]+@','_',$machine_readable);
+  upm_commerce_delete_shipping_line_items($order);
+
+  // Set the currency code.
+  $default_currency_code=commerce_default_currency();
+  if ($balance=commerce_payment_order_balance($order)) {
+     $default_currency_code=$balance['currency_code'];
+  }
+
+  // Create the new line item.
+  $line_item=commerce_line_item_new('shipping_rates', $order->order_id);
+  // Wrap the line item and order to simplify manipulating their field data.
+  $order_wrapper=entity_metadata_wrapper('commerce_order', $order);
+  $line_item_wrapper=entity_metadata_wrapper('commerce_line_item', $line_item);
+  // Populate the $line_item_wrapper...
+  $line_item_wrapper->line_item_label= $machine_readable."_".$shipping_id;
+  $line_item_wrapper->quantity=1;
+  $line_item_wrapper->commerce_unit_price->amount =  $shipping_price * 100;
+  $line_item_wrapper->commerce_unit_price->currency_code = $default_currency_code;
+  // Set the price component of the unit price.
+  $line_item_wrapper->commerce_unit_price->data=commerce_price_component_add(
+      $line_item_wrapper->commerce_unit_price->value(),
+      $machine_readable,
+      $line_item_wrapper->commerce_unit_price->value(),
+      TRUE,
+      FALSE
+  );
+  // Invoke the 'commerce_giftwrap_calculate' event.
+  rules_invoke_all('commerce_shipping_rates_calculate', $line_item);
+  // Save the incoming line item now so we get its ID.
+  commerce_line_item_save($line_item);
+  // Add it to the order's line item reference value.
+  $order_wrapper->commerce_line_items[]=$line_item;
+  // Save the order.
+  commerce_order_save($order);
+  echo '';
+}
+
+function checkout_msgupdate_callback(){
+  $oid = $_GET['orderid'];
+  $order = commerce_order_load($oid);
+  $message = $_GET['msg'];
+  $order->field_gift_message['und'][0]['value']= $message;
+  commerce_order_save($order);
+  echo '';
+}
+
+function checkout_zipupdate_callback(){
+  $oid = $_GET['orderid'];
+  $order = commerce_order_load($oid);
+  $zip = $_GET['zipcode'];
+  $rates = db_select('commerce_tax_rate', 'r')
+        ->fields('r')
+        ->execute()
+        ->fetchAssoc();
+  $tax_rate = $rates['rate'];
+  $tax_rate = $tax_rate * 100;
+  $tax_display_amount = 0.00;
+  $tax_total = 0.0;
+  $base_price = 0;
+  $discount = 0;
+  $shipping = 0;
+  foreach ($order->commerce_order_total['und'][0]['data']['components'] as $components){
+      if($components['name'] == 'base_price'){
+          $base_price = $components['price']['amount'];
+      }
+      else if($components['name'] == 'discount'){
+          $discount = $components['price']['amount'];
+
+      }
+      else if($components['name'] == 'tax_rates'){
+        //  $discount = $components['price']['amount'];
+      }
+      else{
+          $query = db_select('shipping_options', 's')
+              ->fields('s' , array('id','label'));
+          $results =  $query->execute()->fetchAll();
+          foreach ($results as $result) {
+              $human_readable = $result->label;
+              $machine_readable = strtolower($human_readable);
+              $machine_readable = preg_replace('@[^a-z0-9_]+@','_',$machine_readable);
+              if($components['name'] == $machine_readable){
+                  $shipping = $components['price']['amount'];
+              }
+          }
+      }
+  }
+
+  $base_price = $base_price + $discount;
+  $total = $base_price / 100;
+  $states = db_select('zipcode', 'z')
+      ->distinct('state')
+      ->fields('z' , array('state'))
+      ->condition('zip',$zip)
+      ->execute()
+      ->fetchAssoc();
+  upm_commerce_delete_tax_line_items($order);
+  if(count($states) && $states['state'] == 'New Jersey') {
+      $tax_total = $tax_rate * $total ;
+      $tax_display_amount = $tax_total / 100 ;
+      $tax_display_amount = round($tax_display_amount, 2);
+  }
+    // Set the currency code.
+  $default_currency_code = commerce_default_currency();
+  if ($balance = commerce_payment_order_balance($order)) {
+      $default_currency_code=$balance['currency_code'];
+  }
+
+  // Create the new line item.
+  $line_item = commerce_line_item_new('tax_rates', $order->order_id);
+  // Wrap the line item and order to simplify manipulating their field data.
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  $line_item_wrapper = entity_metadata_wrapper('commerce_line_item', $line_item);
+  // Populate the $line_item_wrapper...
+  $line_item_wrapper->line_item_label = 'Sales Tax';
+  $line_item_wrapper->quantity = 1;
+  $line_item_wrapper->commerce_unit_price->amount =  $tax_total;
+  $line_item_wrapper->commerce_unit_price->currency_code = $default_currency_code;
+  // Set the price component of the unit price.
+  $line_item_wrapper->commerce_unit_price->data = commerce_price_component_add(
+      $line_item_wrapper->commerce_unit_price->value(),
+      'tax_rates',
+      $line_item_wrapper->commerce_unit_price->value(),
+      TRUE,
+      FALSE
+  );
+  // Invoke the 'commerce_tax_rates_calculate' event.
+  rules_invoke_all('commerce_tax_rates_calculate', $line_item);
+  // Save the incoming line item now so we get its ID.
+  commerce_line_item_save($line_item);
+  // Add it to the order's line item reference value.
+  $order_wrapper->commerce_line_items[] = $line_item;
+  // Save the order.
+  commerce_order_save($order);
+}
+
+/**
+ * Impliments hook_commerce_line_item_summary_link_info()
+ */
+function sparklelabs_updates_commerce_line_item_summary_link_info_alter(&$links) {
+  if(isset($links['view_cart'])){
+  	$links['view_cart']['title'] = t('View bag');
+  }
+}
+
+/**
+ * Impliments hook_preprocess_commerce_line_item_summary()
+ */
+/*function sparklelabs_updates_preprocess_commerce_line_item_summary(&$variables) {
+  echo "<pre>";print_r($variables);echo "</prE>";exit;
+  // Replace the label ( default to Total ) with your own label
+  //$variables['total_label'] = t('My New Label');
+}*/
+
+function sparklelabs_updates_commerce_coupon_condition_outcome_alter(&$outcome, $context) {
+  $order_coupons = $context['order']->commerce_coupons->value();
+  $coupon = $context['coupon']->value();
+  //echo "<pre>";print_r($order_coupons);echo "</prE>";exit;
+  
+
+  // Validate only if the order doesn't contain other coupons
+  // or if the current coupon is the first one added to the order.
+  if (!empty($order_coupons) && ($order_coupons[0]->coupon_id !== $coupon->coupon_id)) {
+    //drupal_set_message(t('You cannot use more than 1 coupon for the same order.'), 'warning');
+    $outcome = FALSE;
+  }
+
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function sparklelabs_updates_field_widget_form_alter(&$element, $form_state, $context) {
+  if(!empty($element['#addressfield'])) {
+    $element['locality_block']['postal_code']['#weight'] = -100;
+    $element['country']['#weight'] = 100;
+  }
+}
+
+function sparklelabs_updates_form_alter(&$form, &$form_state, $form_id){
+   if (strpos($form_id, 'views_form_commerce_cart_form_') === 0) {
+    $form['#suffix'] .= '<div id="block-views-cart-view-block" class="col-sm-8 p-0">'.views_embed_view('cart_view', $display_id = 'block').'</div>';
+   }
+}
+
+

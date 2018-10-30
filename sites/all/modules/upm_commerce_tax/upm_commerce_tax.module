@@ -1,0 +1,394 @@
+<?php
+/**
+ * @file
+ * This module adds a new checkout pane with configuration settings to allow
+ * users to select a tax option to add to their order. Store owners
+ * can set a price for tax option .
+ */
+
+
+/**
+ * Implements hook_commerce_line_item_type_info().
+ */
+function upm_commerce_tax_commerce_line_item_type_info() {
+  return array(
+    'tax_rates' => array(
+      'type' => 'tax_rates',
+      'name' => t('Sales Tax'),
+      'description' => t('Line item for tax options.'),
+      'add_form_submit_value' => t('Tax'),
+      'base' => 'upm_commerce_tax_commerce_line_item',
+      'callbacks' => array(
+        'configuration' => 'upm_commerce_tax_configure_line_item',
+      ),
+    ),
+  );
+}
+
+/**
+ * Function called by the line item module when it or this module is enabled.
+ */
+function upm_commerce_tax_configure_line_item() {
+
+}
+
+
+/**
+ * Implements hook_commerce_price_component_type_info().
+ */
+function upm_commerce_tax_commerce_price_component_type_info() {
+
+        $price['tax_rates'] =  array(
+            'title' => 'Sales Tax',
+            'weight' => -40,
+        );
+
+  return $price;
+}
+
+function upm_commerce_delete_tax_line_items($order) {
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  $line_item_id = NULL;
+  foreach ($order_wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+    // If this line item is a tax line item...
+    if ($line_item_wrapper->type->value() == 'tax_rates') {
+      // Store its ID for later deletion and remove the reference from the line
+      // item reference field.
+      $line_item_id = $line_item_wrapper->line_item_id->value();
+      $order_wrapper->commerce_line_items->offsetUnset($delta);
+      break;
+    }
+  }
+  // If we found any giftwrap line items...
+  if (!empty($line_item_id)) {
+    // First save the order to update the line item reference field value.
+    commerce_order_save($order);
+    // Then delete the line items.
+    commerce_line_item_delete($line_item_id);
+  }
+}
+
+function upm_commerce_tax_line_item_exists($order) {
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+    // If this line item is a giftwrap line item...
+    if ($line_item_wrapper->type->value() == 'tax_rates') {
+
+      return TRUE;
+    }
+  }
+}
+
+
+
+function upm_commerce_get_tax_line_item_id($order) {
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+    // If this line item is a tax line item...
+    if ($line_item_wrapper->type->value() == 'tax_rates') {
+      return $line_item_wrapper->line_item_id->value();
+    }
+  }
+}
+
+
+function upm_commerce_tax_commerce_cp_info() {
+    $cart_panes = array();
+    $cart_panes['tax_info'] = array(
+        'name' => t('Sales Tax'),
+        'pane callback' => 'commerce_cp_tax_info_pane',
+        'page' => 'cart',
+    );
+    $cart_panes['mini_cart_subtotal'] = array(
+        'name' => t('Subtotal'),
+        'pane callback' => 'commerce_cp_subtotal_pane',
+        'page' => 'cart',
+    );
+    $cart_panes['mini_cart_order_details'] = array(
+        'name' => t('Order Details'),
+        'pane callback' => 'commerce_cp_order_total_pane',
+        'page' => 'cart',
+    );
+    return $cart_panes;
+}
+/**
+ * subtotal cart pane callback
+ */
+function commerce_cp_subtotal_pane($form, $form_state, $cart_order, $pane_weight) {
+    $base_price = 0;
+    $discount = 0;
+    foreach ($cart_order->commerce_order_total['und'][0]['data']['components'] as $components){
+        if($components['name'] == 'base_price'){
+            $base_price = $components['price']['amount'];
+        }
+        else if($components['name'] == 'discount'){
+            $discount = $components['price']['amount'];
+
+        }
+    }
+    $promo = '';
+    foreach ($cart_order->commerce_line_items['und'] as $itemval) {
+        $lineitemid = $itemval['line_item_id'];
+        $lineItemObj = commerce_line_item_load($lineitemid);
+        if($lineItemObj->type == 'commerce_discount'){
+            $currency_code = $lineItemObj->commerce_total['und'][0]['currency_code'];
+            $dis_amt = commerce_currency_format($lineItemObj->commerce_total['und'][0]['amount'], $currency_code, $object = NULL, $convert = TRUE);
+            $promo .= '<tr class="component-type-commerce-discount">
+                  <td class="component-title">Promo</td>
+                  <td class="component-total">'.$dis_amt.'</td>
+                </tr>';
+        }
+    }
+
+    $base_price = ($base_price + $discount)/100;
+    $base_price = number_format($base_price, 2, '.', '');
+    $output = '<table class="commerce-order-handler-subtotal  table-ajax-order-total table ">
+      <tr class="component-type-commerce-subtotal">
+         <td class="component-title">Subtotal</td>
+         <td class="component-total">$'.$base_price.'</td>
+      </tr>'.$promo.'
+    </table>';
+    $form_pane['subtotal_wrapper'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => FALSE,
+        '#collapsed' => FALSE,
+        '#tree' => TRUE,
+        '#weight' => $pane_weight,
+        '#prefix' => '<div id="mini-cart-subtotal">',
+        '#suffix' => '</div>',
+    );
+    $form_pane['subtotal_wrapper']['html_markup'] = array(
+        '#type' => 'markup',
+        '#markup' =>$output
+    );
+    return $form_pane;
+}
+/**
+ * order_detail cart pane callback
+ */
+function commerce_cp_order_total_pane($form, $form_state, $cart_order, $pane_weight) {
+    $base_price = 0;
+    $tax = 0;
+    $discount = 0;
+    $shipping = 0;
+    $promo = 0;
+    foreach($cart_order->commerce_line_items['und'] as $item){
+        $line_item = commerce_line_item_load($item['line_item_id']);
+        if($line_item->type == 'shipping_rates'){
+            $shipping = $line_item->commerce_total['und'][0]['amount'];
+        }
+        else if($line_item->type == 'tax_rates'){
+            $tax = $line_item->commerce_total['und'][0]['amount'];
+        }
+        else if($line_item->type == 'commerce_discount'){
+            $promo += $line_item->commerce_total['und'][0]['amount'];
+        }
+    }
+    foreach ($cart_order->commerce_order_total['und'][0]['data']['components'] as $components){
+
+        if($components['name'] == 'base_price'){
+            $base_price = $components['price']['amount'];
+        }
+        else if($components['name'] == 'discount'){
+            $discount = $components['price']['amount'];
+
+        }
+    }
+    $base_price = ($base_price + $discount);
+    $subtotal = ($base_price + $tax + $shipping + $promo) / 100;
+    $subtotal = number_format($subtotal, 2, '.', '');
+    $tax_display_amount = $tax / 100;
+    $class = '';
+    if($tax_display_amount > 0){
+        $class = 'tax-applied';
+    }
+    $tax_display_amount = number_format($tax_display_amount, 2, '.', '');
+    $output = '<table class="commerce-order-handler-area-order-total table-ajax-order-total table ">
+    <tr class="component-type-tax-rates '.$class.'">
+      <td class="component-title">Sales Tax</td>
+      <td class="component-total">$'.$tax_display_amount.'</td>
+    </tr>
+    <tr class="component-type-commerce-price-formatted-amount">
+       <td class="component-title">Subtotal</td>
+       <td class="component-total">$'.$subtotal.'</td>
+    </tr>
+    </table>';
+    $form_pane['order_wrapper'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => FALSE,
+        '#collapsed' => FALSE,
+        '#tree' => TRUE,
+        '#weight' => $pane_weight,
+        '#prefix' => '<div id="mini-cart-order-detail">',
+        '#suffix' => '</div>',
+    );
+    $form_pane['order_wrapper']['html_markup'] = array(
+        '#type' => 'markup',
+        '#markup' =>$output
+    );
+    return $form_pane;
+}
+
+
+/**
+ * tax info cart pane callback
+ */
+function commerce_cp_tax_info_pane($form, $form_state, $cart_order, $pane_weight) {
+    $form_pane['tax_form_wrapper'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => FALSE,
+        '#collapsed' => FALSE,
+        '#tree' => TRUE,
+        '#weight' => $pane_weight,
+        '#prefix' => '<div id="calculate-tax-form">',
+        '#suffix' => '</div>',
+    );
+    $rates = db_select('commerce_tax_rate', 'r')
+        ->fields('r')
+        ->execute()
+        ->fetchAssoc();
+    $form_pane['tax_form_wrapper']['tax'] = array(
+        '#type' => 'hidden',
+        '#default_value' => $rates['rate'],//$variable['build_info']['args'][0] ,
+        '#required' => TRUE,
+    );
+    $form_pane['tax_form_wrapper']['order_id'] = array(
+        '#type' => 'hidden',
+        '#default_value' => $cart_order->order_id,//$variable['build_info']['args'][0] ,
+        '#required' => TRUE,
+    );
+    $form_pane['tax_form_wrapper']['zip'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Sales Tax'),
+        '#size' => 20,
+        '#maxlength' => 20,
+        '#attributes' => array('placeholder' => 'zip code')
+    );
+    $form_pane['tax_form_wrapper']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('calculate'),
+        '#ajax' => array(
+            'callback' => 'tax_info_ajax_callback',
+            'wrapper' => 'views-form-commerce-cart-form-default',
+        )
+    );
+    return $form_pane;
+}
+
+function tax_info_ajax_callback($form, $form_state){
+    $order_id = $form_state['values']['tax_form_wrapper']['order_id'];
+    $order = commerce_order_load($order_id);
+    $zip = $form_state['values']['tax_form_wrapper']['zip'];
+    $tax_rate = $form_state['values']['tax_form_wrapper']['tax'];
+    $tax_rate = $tax_rate * 100;
+    $tax_display_amount = 0.00;
+    $tax_total = 0.0;
+    $base_price = 0;
+    $discount = 0;
+    $shipping = 0;
+    $promo = 0;
+    foreach($order->commerce_line_items['und'] as $item){
+        $line_item = commerce_line_item_load($item['line_item_id']);
+        if($line_item->type == 'commerce_discount'){
+            $promo += $line_item->commerce_total['und'][0]['amount'];
+        }
+    }
+
+    foreach ($order->commerce_order_total['und'][0]['data']['components'] as $components){
+        if($components['name'] == 'base_price'){
+            $base_price = $components['price']['amount'];
+        }
+        else if($components['name'] == 'discount'){
+            $discount = $components['price']['amount'];
+
+        }
+        else if($components['name'] == 'tax_rates'){
+          //  $discount = $components['price']['amount'];
+        }
+        else{
+            $query = db_select('shipping_options', 's')
+                ->fields('s' , array('id','label'));
+            $results =  $query->execute()->fetchAll();
+            foreach ($results as $result) {
+                $human_readable = $result->label;
+                $machine_readable = strtolower($human_readable);
+                $machine_readable = preg_replace('@[^a-z0-9_]+@','_',$machine_readable);
+                if($components['name'] == $machine_readable){
+                    $shipping = $components['price']['amount'];
+                }
+            }
+        }
+    }
+
+    $base_price = $base_price + $discount;
+    $total = $base_price / 100;
+    $states = db_select('zipcode', 'z')
+        ->distinct('state')
+        ->fields('z' , array('state'))
+        ->condition('zip',$zip)
+        ->execute()
+        ->fetchAssoc();
+    upm_commerce_delete_tax_line_items($order);
+    if(count($states) && $states['state'] == 'New Jersey') {
+        $tax_total = $tax_rate * $total ;
+        $tax_display_amount = $tax_total / 100 ;
+        $tax_display_amount = round($tax_display_amount, 2);
+    }
+    // Set the currency code.
+        $default_currency_code = commerce_default_currency();
+        if ($balance = commerce_payment_order_balance($order)) {
+            $default_currency_code=$balance['currency_code'];
+        }
+
+        // Create the new line item.
+        $line_item = commerce_line_item_new('tax_rates', $order->order_id);
+        // Wrap the line item and order to simplify manipulating their field data.
+        $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+        $line_item_wrapper = entity_metadata_wrapper('commerce_line_item', $line_item);
+        // Populate the $line_item_wrapper...
+        $line_item_wrapper->line_item_label = 'Sales Tax';
+        $line_item_wrapper->quantity = 1;
+        $line_item_wrapper->commerce_unit_price->amount =  $tax_total;
+        $line_item_wrapper->commerce_unit_price->currency_code = $default_currency_code;
+        // Set the price component of the unit price.
+        $line_item_wrapper->commerce_unit_price->data = commerce_price_component_add(
+            $line_item_wrapper->commerce_unit_price->value(),
+            'tax_rates',
+            $line_item_wrapper->commerce_unit_price->value(),
+            TRUE,
+            FALSE
+        );
+        // Invoke the 'commerce_tax_rates_calculate' event.
+        rules_invoke_all('commerce_tax_rates_calculate', $line_item);
+        // Save the incoming line item now so we get its ID.
+        commerce_line_item_save($line_item);
+        // Add it to the order's line item reference value.
+        $order_wrapper->commerce_line_items[] = $line_item;
+        // Save the order.
+        commerce_order_save($order);
+    $subtotal = ($base_price + $tax_total + $shipping + $promo) / 100;
+    $subtotal = number_format($subtotal, 2, '.', '');
+
+    $commands = array();
+    $class = '';
+    if($tax_display_amount > 0){
+        $class = 'tax-applied';
+    }
+    $tax_display_amount = (count($states) && $states['state'] == 'New Jersey')? number_format($tax_display_amount, 2, '.', '') :"0.00";
+    $output = '<table class="commerce-order-handler-area-order-total table-ajax-order-total table ">
+    <tr class="component-type-tax-rates '.$class.'">
+      <td class="component-title">Sales Tax</td>
+      <td class="component-total">$'.$tax_display_amount.'</td>
+    </tr>
+    <tr class="component-type-commerce-price-formatted-amount">
+       <td class="component-title">Subtotal</td>
+       <td class="component-total">$'.$subtotal.'</td>
+    </tr>
+    </table>';
+    $commands[] = ajax_command_replace('.commerce-order-handler-area-order-total', $output);
+    $element = array(
+        '#type' => 'ajax',
+        '#commands' => $commands
+    );
+    return $element;
+}

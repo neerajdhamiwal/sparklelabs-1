@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * Implements hook_help().
+ */
+function filter_example_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#urm_filter':
+      return _utm_filter_information();
+  }
+}
+
+/**
+ * Simply returns a little bit of information about the example.
+ */
+function _utm_filter_information() {
+  return t("<p>This module adds utm_source, utm_medium and utm_campaign tags to all links. </p>
+            <p>To use this filter, go to !link and configure an input format, or create a new one.</p>",
+    array('!link' => l("admin/config/content/formats", "admin/config/content/formats"))
+  );
+}
+
+/**
+ * Define the filter
+ */
+function utm_filter_filter_info() {
+  $filters['filter_utm'] = array(
+    'title' => t('Google Analytics utm_* filter'),
+    'description' => t('Adds utm_* tags to every URL'),
+    'process callback'  => '_utm_process',
+    'default settings' => array(
+      'filter_utm_source' => '[node:content-type]',
+      'filter_utm_medium' => 'web',
+      'filter_utm_campaign' => '[node:title]',
+    ),
+    'settings callback' => '_utm_settings',
+  );
+  return $filters;
+}
+
+
+/**
+ * The actual filtering is performed here.
+ */
+function _utm_process($text, $filter, $format) {
+  $utm_source =  isset($filter->settings['filter_utm_source']) ? $filter->settings['filter_utm_source'] : '[node:content-type]';
+  $utm_medium =  isset($filter->settings['filter_utm_medium']) ? $filter->settings['filter_utm_medium'] : 'web';
+  $utm_campaign =  isset($filter->settings['filter_utm_campaign']) ? $filter->settings['filter_utm_campaign'] : '[node:title]';
+  return preg_replace_callback(
+    "/(href=[\"'])(.*?)([\"'])/",
+    function($matches) use ($utm_source, $utm_medium, $utm_campaign){
+      if (strpos($matches[2],'?') == false) {
+         return $matches[1] . $matches[2] . "?utm_source=" . $utm_source . "&utm_medium=" . $utm_medium . "&utm_campaign=" . $utm_campaign . $matches[3];
+      } else {
+         return $matches[1] . $matches[2] . "&utm_source=" . $utm_source . "&utm_medium=" . $utm_medium . "&utm_campaign=" . $utm_campaign . $matches[3];
+      }
+    }, $text);
+}
+
+function _utm_settings($form, $form_state, $filter, $format, $defaults) {
+  $settings['filter_utm_source'] = array(
+    '#type' => 'textfield',
+    '#title' => t('utm_source'),
+    '#default_value' => isset($filter->settings['filter_utm_source']) ? $filter->settings['filter_utm_source'] : $defaults['filter_utm_source'],
+    '#description' => t('The value of utm_source. Tokens are possible')
+  );
+  $settings['filter_utm_medium'] = array(
+    '#type' => 'textfield',
+    '#title' => t('utm_medium'),
+    '#default_value' => isset($filter->settings['filter_utm_medium']) ? $filter->settings['filter_utm_medium'] : $defaults['filter_utm_medium'],
+    '#description' => t('The value of utm_medium. Tokens are possible')
+  );
+  $settings['filter_utm_campaign'] = array(
+    '#type' => 'textfield',
+    '#title' => t('utm_campaign'),
+    '#default_value' => isset($filter->settings['filter_utm_campaign']) ? $filter->settings['filter_utm_campaign'] : $defaults['filter_utm_campaign'],
+    '#description' => t('The value of utm_campaign. Tokens are possible')
+  );
+  return $settings;
+}

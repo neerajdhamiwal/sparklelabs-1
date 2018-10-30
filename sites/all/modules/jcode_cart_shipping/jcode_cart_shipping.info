@@ -1,0 +1,6 @@
+name = Jcode shipping on cart page
+description = Show shipping on cart page.
+
+version = "7.x-0"
+core = "7.x"
+

@@ -1,0 +1,5 @@
+name = Sparklelabs Updates
+description = This module used for custom updates in sparklelabs
+version = 7.x-1.0
+core = 7.x
+package = Custom

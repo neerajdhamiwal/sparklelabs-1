@@ -1,0 +1,62 @@
+/**
+ * Tables.
+ */
+table {
+  width: 100%;
+  font-size: 0.923em;
+  margin: 0 0 10px;
+}
+table td,
+table th {
+  vertical-align: middle;
+  padding: 8px 10px;
+  border: 0;
+  color: #000;
+}
+
+table th {
+  text-transform: uppercase;
+  font-weight: normal;
+  borderbottom: 1px solid #bebfb9;
+  padding: 3px 10px;
+}
+table th a {
+  display: block;
+  position: relative;
+}
+table th.active a {
+  padding: 0 25px 0 0; /* LTR */
+}
+table th.active img {
+  position: absolute;
+  top: 3px;
+  right: 3px; /* LTR */
+}
+/**
+ * Exception for webkit bug with the right border of the last cell
+ * in some tables, since it's webkit only, we can use :last-child
+ */
+p {
+  margin: 5px 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  margin: 10px 0;
+}
+h5, h6 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.field-name-commerce-order-total .commerce-price-formatted-components {
+  width: 33%;
+  margin-left: auto;
+}
+.contextual-links-wrapper {
+  display: none;
+}
+.view-commerce-order2pdf-line-item-table {
+  border-bottom:1px solid #bebfb9 ;
+}
+tr > td:last-of-type {
+  text-align: right !important;
+}

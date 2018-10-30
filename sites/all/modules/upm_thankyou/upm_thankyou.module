@@ -1,0 +1,126 @@
+  <?php
+
+  /**
+  * Implements hook_menu().
+  */
+  function upm_thankyou_menu()
+  {
+  $menu['order/%/thank-you'] = array
+  (
+  'title' => '',
+  'type' => MENU_NORMAL_ITEM,
+  'page callback' => 'thankyou_page_callback',
+  'page arguments' => array(1),
+  'access arguments' => array('access content'),
+
+  );
+  return $menu;
+  }
+  function thankyou_page_callback($arg){
+  return theme('thankyou', array('order_id' => $arg));
+  }
+  /**
+  * Implements hook_theme.
+  */
+  function upm_thankyou_theme() {
+  return array(
+  'thankyou' => array(
+  'variables' => array(
+  // Specifies both available variables.
+  'order_id' => NULL,
+  ),
+  // It will be automatically loaded by Drupal.
+  'template' => 'templates/thankyou.tpl.php',
+  ),
+  );
+  }
+  function order_share_block(){
+  $order_id = arg(1);
+  $html = '';
+  $product_div = '<div>';
+  $options = array();
+  $links = array();
+  $order = commerce_order_load($order_id);
+  foreach ($order->commerce_line_items['und'] as $line) {
+    $line_item = commerce_line_item_load($line['line_item_id']);
+    if(isset($line_item->commerce_product['und'])){
+      $product_id = $line_item->commerce_product['und'][0]['product_id'];
+      $nid = get_product_nid($product_id);
+      $node = node_load($nid);
+      $fid = $node->field_images_and_videos['und'][0]['fid'];
+      $file = file_load($fid); 
+      $options[$product_id] = $node->title; 
+      //$html .= '<div class="share-title" id="' . $product_id . '" ><br><i>' . $node->title . '</i><br></div>';
+      //$html .= $node->field_images_and_videos['und'][0]['fid'];
+      //$html .= '<b>' . $node->field_summary['und'][0]['value'] . '</b><br>';
+      $img_path = file_create_url($file->uri);
+      global $base_url;
+      $product_url = $base_url . '' . url("node/" . $nid);
+      $links[$product_id] = $product_url;
+      //Wrapper class for a particular product.
+      $product_div .=  '<div id="product-' . $product_id . '-wrapper" >';
+      //Product Image Link
+
+      $product_div .= '<div class="row"><div class="col-sm-3"><img class="share-img" id="' . $product_id . '"src ="'. $img_path . '" > <br></div>';
+
+      //Share Button Wrapper
+      $product_div .= '<div class="col-sm-9"><div class= "hideshare">';
+      $product_div .=  '<textarea class="form-control">I just bought a ' . $node->title . ' from Sparkle Labs! #STEAM &#13;'.$product_url.'</textarea>';
+      //Facebook Share
+      $product_div .= '<a class="btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u='. $product_url .'" target="_blank">Share on Facebook</a><br>';
+      //Email Share
+      $product_div .= '<a class="btn-mail" href="mailto:?subject=Found an amazing deal" target="_top">Send Mail</a><br>';
+      //Twitter Share
+      $product_div .= '<a class="twitter-share-button" href="https://twitter.com/intent/tweet" "target="_blank" data-size="large">Tweet</a><br>';
+      //Pinterest Share
+      $product_div .=  '<a class="btn-pin" href="http://pinterest.com/pin/create/button/?url=' . $product_url . '&media=' . rawurlencode($img_path) . '" class="pin-it-button" target="_blank" count-layout="horizontal"> <img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" style="width: 70px;"" /></a>';
+      $product_div .=  '</div>';
+
+      $product_div .=  '</div></div></div>';
+
+    }            
+  }
+  $product_div .= "</div>";
+  $html .= drupal_render(drupal_get_form('upm_thankyou_form', $options,$links));
+  // die;
+  $html .= $product_div;
+
+  return $html;
+  }
+
+  function upm_thankyou_form($form, &$form_state, $options ,$links) { 
+  $product_link = implode(PHP_EOL, $links);
+  $form['share_title_select'] = array(
+    '#type' => 'select',
+    '#title' => t(''),
+    '#options' => $options,
+    '#description' => t('Choose the product you would like to share'),
+  );
+
+  // $form['share_msg_text'] = array(
+  // '#type' => 'textarea',
+  // '#title' => t(''),
+  // '#rows' => 10,
+  // '#default_value' => t("Hey just brought the product \n@links" ,array('@links' => $product_link,)),
+  // );
+
+  $form['#attached']['js'] = array(
+  drupal_get_path('module', 'upm_thankyou') . '/thankyou.js',
+  );
+  return $form;
+  }
+
+  function get_product_nid($pid){
+  $query = new EntityFieldQuery;
+
+  $query->entityCondition('entity_type', 'node', '=')
+  ->propertyCondition('type', 'product')
+  ->fieldCondition('field_product_reference', 'product_id', $pid, '=')
+  ->range(0, 1);
+
+  if ($result = $query->execute()) {
+  //Do stuff with the result
+  $nid = key($result['node']);
+  return $nid;   
+  }
+  }

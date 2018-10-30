@@ -1,0 +1,1069 @@
+``
+#block-views-glowing-papertronics-block-1 .block-body h2, #block-views-glowing-papertronics-block .block-body h2, #block-imageblock-2 .block-body h2{
+  background: #00ffa2!important;
+  color: #fb3c8b;
+  height: auto!important;
+  font-size: 2em;
+  font-weight: 600;
+  margin: 57px 0 10px;
+  padding: 7px;
+  text-align: left;
+  display: inline-block;
+  position: relative;
+  line-height: 2.2rem;
+}
+
+#block-views-glowing-papertronics-block .block-body h2:after, 
+#block-imageblock-2 .block-body h2:after, 
+#block-views-glowing-papertronics-block-1 .block-body h2:after {
+   /* content: '';
+    background-image: url(images/title-bg.png);
+    width: 100%;
+    height: 50px;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 100%;
+    top: -1px;*/
+}
+
+#block-views-glowing-papertronics-block-1 .block-body, #block-views-glowing-papertronics-block .block-body {
+    padding-left: 92px;
+}
+
+#block-imageblock-2 .block-image, #block-views-invention-education-block .block-image, .region-inner-full .view .block-image, #block-views-glowing-papertronics-block-1 .block-image, #block-views-glowing-papertronics-block .block-image {
+    width: 50%;
+    float: right;
+    position: relative;
+}
+
+.page-node-15 .content_bottom {
+    background: #FB3C8B!important;
+}
+
+#block-upm-custom-component-spk-custom-block1 h2 {
+    font-weight: 600;
+}
+
+#block-views-all-projects-block h2 {
+    font-weight: 600;
+}
+
+.fundingsteam h2 a {
+    font-weight: 600;
+}
+
+#block-views-all-projects-the-lab-block h2 {
+    font-weight: 600;
+}
+
+
+footer.footer {
+    background: url(images/footer-bg.png) no-repeat scroll center bottom/auto 210px #ff0063;
+    background-size: 100%;
+}
+
+.region-footer {
+    background:none;
+}
+
+/************************************ PAYMENT REVIEW PAGE **********************************/
+
+#edit-my-module legend.panel-heading {
+    border: none;
+}
+
+
+.my_module.panel.panel-default.form-wrapper .panel-heading .panel-title.fieldset-legend {
+    font-size: 26px;
+    color: #61615f;
+    border-bottom: 1px solid #35c8b8;
+    font-weight: bold;
+    display: block;
+    padding-bottom: 8px;
+}
+
+
+#edit-commerce-giftwrap legend.panel-heading {
+    margin-top: 40px;
+    border-bottom:none;
+    border-top:none;
+    margin-bottom: 8px;
+}
+
+#edit-commerce-giftwrap legend.panel-heading span {
+    font-size: 26px;
+    font-weight: 600;
+    color: #61615f;
+    border-bottom: 1px solid #35c8b8;
+    display: block;
+    padding-bottom: 8px;
+} 
+
+.page-checkout-427 .panel-heading {
+    padding: 10px 15px 5px;
+}
+
+.form-item.form-item-commerce-giftwrap-my-gift-pane-gift-check.form-type-checkbox.checkbox{
+    margin-bottom: 0;
+}
+
+.form-item.form-item-commerce-giftwrap-my-gift-pane-gift-check.form-type-checkbox.checkbox label{
+  margin-top: 20px;
+}
+
+.commerce_giftwrap.panel.panel-default.form-wrapper .panel-body {
+    border-bottom: none;
+}
+
+#edit-customer-profile-billing legend.panel-heading, #edit-customer-profile-shipping legend.panel-heading, #edit-commerce-shipping-rates legend.panel-heading {
+    border:none;
+}
+
+.customer_profile_shipping.panel.panel-default.form-wrapper .panel-title.fieldset-legend, .customer_profile_billing.panel.panel-default.form-wrapper .panel-title.fieldset-legend{
+    border-bottom: 1px solid #35c8b8;
+    display: block;
+    font-size: 26px;
+    color: #61615f;
+    padding-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-item.form-item-customer-profile-shipping-field-title-und.form-type-select.form-group label, .field-type-addressfield.field-name-commerce-customer-address.field-widget-addressfield-standard.form-wrapper.form-group label, .form-item.form-item-customer-profile-billing-field-title-und.form-type-select.form-group label{
+    font-weight: bold;
+}
+
+#edit-commerce-payment .panel-heading {
+    border: none;
+}
+
+.commerce_payment.panel.panel-default.form-wrapper .panel-title.fieldset-legend {
+    border-bottom: 1px solid #35c8b8;
+    font-weight: bold;
+    padding-bottom: 8px;
+    display: block;
+}
+
+#block-upm-order-compelete-gift-review h2, #block-upm-order-compelete-shipping-review h2, #block-upm-order-compelete-billing-review h2, #block-upm-order-compelete-shipping-method-review h2, #block-upm-order-compelete-payment-method-review h2 {
+    font-weight: 600;
+}
+
+.commerce_shipping_rates.panel.panel-default.form-wrapper .panel-title.fieldset-legend {
+    border-bottom: 1px solid #35c8b8;
+    font-weight: bold;
+    padding-bottom: 8px;
+    display: block;
+}
+
+.html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
+    margin-bottom: 0px;
+    padding-top: 70px;
+}
+
+.html.not-front.no-sidebars.page-checkout.page-checkout-review .content_top1.container-fluid {
+    margin-bottom: 40px;
+}
+
+
+
+.commerce_payment.panel.panel-default.form-wrapper .panel-body {
+    border-bottom: 1px solid #35c8b8;
+}
+
+#commerce-checkout-form-checkout {
+    margin-top: 5px;
+}
+
+
+#edit-my-module .form-item-my-module-my-module-pane-newsletters-list {
+    min-height: 70px;
+}
+
+#edit-commerce-giftwrap .panel-body .form-item-my-gift-my-gift-pane-gift-check label, .page-checkout .checkbox label {
+    font-weight: 400;
+}
+
+.checkout-buttons.panel.panel-default.form-wrapper .panel-body{
+    padding-right: 0px;
+}
+
+#edit-buttons #edit-continue {
+    background-color: #35c8b8 !important;
+    border: 1px solid #35c8b8 !important;
+    color: #fff;
+    font-weight: bold;
+    float: right;
+}
+
+#commerce-checkout-form-checkout .cart_contents.panel.panel-default.form-wrapper {
+    border-color: #35c8b8;
+}
+
+.page-checkout #edit-cart-contents .panel-body .view-footer .table-responsive table tbody tr.component-type-base-price {
+    border-bottom: 1px solid #35c8b8;
+}
+
+.page-checkout #edit-cart-contents .panel-body .view-footer .table-responsive table tbody tr.component-type-commerce-price-formatted-amount {
+    border-top: 1px solid #35c8b8;
+    border-bottom: none;
+}
+
+#commerce-checkout-coupon-ajax-wrapper .commerce_coupon .panel-body button {
+    float: none;
+    margin-top: 0px;
+    margin-left: 0px;
+    background: #35c8b8;
+    color: #fff;
+    padding: 5px 17px;
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+.page-checkout-review #block-upm-order-compelete-cart-content-review {
+    width: 30%;
+}
+
+.page-checkout-review #left-main-colum {
+    width: 67%;
+}
+
+.page-checkout-review .view-checkout-confirmation-title .views-field-field-email .field-content {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #35c8b8;
+    border-top:  1px solid #35c8b8;
+    padding: 30px 10px 20px 0;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+#block-upm-order-compelete-gift-review, #block-upm-order-compelete-shipping-review, #block-upm-order-compelete-billing-review {
+    border-right: none;
+}
+
+#block-upm-order-compelete-gift-review, #block-upm-order-compelete-shipping-review, #block-upm-order-compelete-billing-review, #block-upm-order-compelete-shipping-method-review {
+    min-height: 200px;
+}
+
+#block-upm-order-compelete-payment-method-review {
+    border:none;
+    border-bottom:  1px solid #35c8b8;
+    border-top:  1px solid #35c8b8;
+    padding: 40px 10px 40px 0px;
+    width: 100%;
+}
+
+#commerce-checkout-form-checkout .commerce_coupon.panel.panel-default.form-wrapper {
+    border-color: #35c8b8;
+}
+
+#block-upm-order-compelete-cart-content-review {
+    border: 1px solid #35c8b8;
+}
+
+#block-upm-order-compelete-cart-content-review h2 {
+    border-bottom: 1px dashed #35c8b8;
+    font-size: 26px;
+}
+
+#block-upm-order-compelete-cart-content-review .view-commerce-cart-summary .view-footer table tbody tr.component-type-base-price {
+    border-bottom: 1px solid #35c8b8;
+}
+
+#block-upm-order-compelete-cart-content-review .view-commerce-cart-summary .view-footer table tbody tr.component-type-commerce-price-formatted-amount {
+    border-top: 1px solid #35c8b8;
+}
+
+.view-commerce-cart-summary #edit-buttons #edit-continue {
+    background-color:#35c8b8;
+    border:none;
+    border-radius: 0;
+    color: #fff;
+    display: block;
+    margin: auto;
+    padding: 8px 55px;
+    width: 190px;
+}
+
+.node-type-projects .content_bottom.container-fluid {
+    background: #f7f7f7 !important;
+}
+
+.page-learn-items .content_bottom {
+    background: #bfbfbf none repeat scroll 0 0 !important;
+}
+
+.workshop-title > p {
+    color: #ececec!important;
+}
+
+.workshop-text > p {
+    color: #ececec!important;
+}
+
+
+.workshop-text a {
+    color: #ececec;
+}
+
+.workshop-button > a {
+    border: 1px solid #fff; 
+    color: #ececec;
+}
+
+#block-views-item-title-block span.pagee-title{
+    color:#339ff5; 
+}
+
+.page-learn-items #block-block-9 {
+    margin-top: 35px!important;
+}
+
+.page-learn-items #followKitModal {
+    border: 1px solid #339ff5;
+    color: #339ff5;
+}
+
+.page-learn-items .scroll-menu li.first a {
+    color: #339ff5;
+}
+
+
+.lesson-title-color {
+    color: #339ff5;
+}
+
+.view-checkout-confirmation-title .views-field-field-email .field-content a {
+    color: #35c8b8;
+    text-transform: capitalize;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#left-main-colum #left-four-colums a {
+    color: #35c8b8;
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+
+#block-upm-order-compelete-cart-content-review h2 a {
+    color: #35c8b8;
+    text-transform: capitalize;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.page-checkout-review #left-main-colum #left-four-colums {
+    border: none;
+}
+
+#block-upm-order-compelete-cart-content-review h2 {
+    text-align: left;
+    font-weight: bold;
+}
+
+#block-upm-order-compelete-gift-review .gift-msg {
+    background-color: transparent;
+    font-style: italic;
+    color: #2e9ef5;
+    margin-top: 50px;
+    height: auto;
+}
+
+#spk-custom-form1.done #msg-newsletter {
+    padding: 10px 45px 10px 19px;
+}
+
+
+.page-checkout #edit-cart-contents span.panel-title.fieldset-legend {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 1px dashed #35c8b8;
+    font-size: 26px;
+    padding-bottom: 10px;
+}
+
+.btn-facebook {
+    border: 1px solid #2e9ef5;
+    background: #2e9ef5;
+}
+
+.page-checkout #commerce-checkout-form-checkout .checkout-buttons {
+    width: 65%;
+    text-align: right;
+}
+
+
+.page-search form{
+    width: 40%;
+    margin: 0 auto;
+}
+
+
+@media (max-width: 1025px ){
+    #block-views-glowing-papertronics-block-1 .block-body h2, #block-views-glowing-papertronics-block .block-body h2, #block-imageblock-2 .block-body h2{
+      font-size: 1.5em;
+    font-weight: 600;
+    margin: 25px 0 5px;
+    padding: 7px;
+    line-height: 2rem;
+    color: #fb3c8b;
+        display: inline-block;
+
+   }
+
+
+
+   #block-views-glowing-papertronics-block-1 .block-body p, #block-views-glowing-papertronics-block .block-body p, #block-imageblock-2 .block-body p {
+    
+    margin-left: 8px;
+}
+
+.checkout-buttons.panel.panel-default.form-wrapper .panel-body {
+    padding-right: 0px;
+    border-top: 1px solid #35c8b8;
+}
+
+.page-checkout #commerce-checkout-form-checkout .checkout-buttons {
+    width: 100%;
+    text-align: right;
+}
+
+#cart-view-main #main-cart-item .col-sm-7 {
+    margin-left: 9px;
+}
+
+.page-checkout-review #left-main-colum {
+    width: 67%;
+    float: left;
+}
+
+.page-node-15 .content_bottom, .node-type-learn-projects .content_bottom {
+    margin-bottom: 50px;
+}
+
+#block-views-add-ons-accessories-block {
+    margin-bottom: 0;
+}
+
+
+.node-type-product .main-content-cart.col-sm-4 {
+    width: 100%;
+}
+
+body.node-type-product .sidebar2-content {
+    width: 100%;
+}
+
+
+.node-type-product .sidebar-sections-price.col-sm-12.p-0, .node-type-product .main-goes-well, .node-type-product .product-det2.p-0, body.node-type-product .product-img.p-0, body.node-type-product .product-img-content.p-0, body.node-type-product .view-goes-well-with .product-det2, body.node-type-product .container.region-inner-fix.example-project-region, body.node-type-product .main-content.col-sm-12, body.node-type-product .main-page-slider.col-sm-12 {
+    padding-right: 3px !important;
+    padding-left: 3px !important;
+}
+
+.view-choose-a-kit.view-id-choose_a_kit.view-display-id-page {
+    padding-top: 25px;
+}
+
+.page-choose-a-kit .small_menu ul {
+    margin-top: 26px;
+}
+
+#block-views-the-lab-block .views-field-title {
+    margin-bottom: 22px;
+    margin-top: 2px;
+}
+
+.node-type-page.admin-menu .header_bt.container-fluid {
+    padding-top: 25px;
+}
+
+.html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
+   padding-top: 0px;
+
+}
+
+.page-checkout-427 .my_module.panel.panel-default.form-wrapper#edit-my-module {
+    height: auto;
+}
+
+#commerce-checkout-coupon-ajax-wrapper .commerce_coupon .panel-body button {
+    padding: 5px 8px;
+}
+
+.form-item.form-item-commerce-coupon-coupon-code.form-type-textfield.form-group label.control-label {
+    padding-right: 5px;
+}
+
+.commerce_coupon.panel.panel-default.form-wrapper .form-control#edit-commerce-coupon-coupon-code {
+    width: 60%;
+}
+
+#commerce-checkout-coupon-ajax-wrapper .commerce_coupon .panel-body .form-item {
+    width: 77%;
+}
+
+.commerce_coupon.panel.panel-default.form-wrapper .form-control#edit-commerce-coupon-coupon-code {
+    padding-left: 10px;
+}
+
+.commerce_coupon.panel.panel-default.form-wrapper .form-control#edit-commerce-coupon-coupon-code {
+    width: 46%;
+}
+
+.page-learn-items #block-block-9 {
+    margin-top: 80px!important;
+}
+
+.page-learn-items .header_bt.container-fluid {
+    padding-top: 0;
+}
+
+.region-footer {
+    background: none;
+}
+
+footer.footer {
+    background: url(images/footer-bg.png) no-repeat scroll center 305px/auto 210px #ff0063;
+    background-size: 100%;
+}
+
+#block-upm-custom-component-spk-custom-block1 {
+    padding-bottom: 36px;
+}
+
+#block-views-all-projects-block, #block-views-all-projects-the-lab-block-2 {
+    margin-bottom: 30px;
+}
+
+.header_bt.container-fluid {
+    padding-top: 15px;
+}
+
+.page-order-thank-you .region.region-content-top1 {
+    padding-top: 0px;
+}
+
+
+
+.slick-dotted.slick-slider {
+  margin-bottom: 0px;
+}
+
+
+}
+
+@media (max-width: 1024px  ) and ( min-width: 767px){
+    .html.not-front.node-type-page .slick.slick--view--productslider .views-field.views-field-title {
+       top: -65px;
+   }
+
+
+   .eduwebform .form-item.webform-component--first-name {
+       float: left;
+   }
+
+   .eduwebform .form-item.webform-component-email {
+       float: left;
+   }
+
+   .webform-component--organization-name {
+       width: 100%;
+       margin-left: 0;
+   }
+
+   .webform-component--titletype {
+       padding-left: 0px;
+   }
+
+   .eduwebform .webform-component--organization-name {
+       width: 100%;
+       margin-left: 0px;
+   }
+
+   .eduwebform .form-actions {
+       text-align: left;
+   }
+
+   .html.not-front.not-logged-in.node-type-page ul.slick-dots {
+       bottom: 73px;
+       text-align: left;
+   }
+
+}
+
+
+
+@media (max-width: 767px ){
+
+    .custommenu1.custommenu2{
+        margin-bottom: 0px !important;
+    }
+
+
+
+    #block-views-glowing-papertronics-block .block-body h2:after, 
+    #block-imageblock-2 .block-body h2:after, 
+    #block-views-glowing-papertronics-block-1 .block-body h2:after {
+       display: none!important;
+   }
+
+   .fundingsteam {
+    padding-top: 20px;
+}
+
+.webform-component--titletype {
+    padding-left: 0;
+    width: 100%;
+}
+
+#edit-submitted-titletype.form-control {
+    width: 100%;
+}
+
+.eduwebform .webform-submit {
+    width: 100%;
+}
+
+.checkout-buttons.panel.panel-default.form-wrapper .panel-body {
+    border-top: none;
+}
+
+#cart-view-main #main-cart-item .product-img.col-sm-3, #cart-view-main #main-cart-item .col-sm-5 {
+    width: 35%;
+}
+
+#edit-commerce-giftwrap legend.panel-heading {
+    margin-top:0px;
+}
+
+
+#edit-buttons #edit-continue {
+    float: left;
+}
+
+.slick-dotted.slick-slider {
+    margin-bottom: 0;
+}
+
+.slick--view--productslider.slick--view--productslider--block {
+    padding-bottom: 0;
+}
+
+#block-views-glowing-papertronics-block-1 .block-body, #block-views-glowing-papertronics-block .block-body {
+    padding-left: 0px;
+    line-height: 2.1rem;
+}
+
+.page-checkout-review #left-main-colum {
+    width: 100%;
+    float: left;
+}
+
+.page-checkout-review #block-upm-order-compelete-cart-content-review {
+    width: 100%;
+    padding: 15px;
+}
+
+.commerce-order-handler-area-order-total .table > tbody > tr.component-type-commerce-price-formatted-amount > td.component-title {
+    padding-bottom: 20px;
+}
+
+.page-node-15 .content_bottom, .node-type-learn-projects .content_bottom {
+    margin-bottom: 50px;
+}
+
+.header_bt.container-fluid {
+   padding-top: 0px;
+}
+
+#block-views-glowing-papertronics-block-1 .block-body h2, #block-views-glowing-papertronics-block .block-body h2, #block-imageblock-2 .block-body h2{
+    margin: 0 0 5px;
+    font-size: 1.4em;
+    line-height: 1.5rem;
+display: inline-block;
+
+
+}
+
+
+footer.footer {
+    padding-top: 0;
+    background: #ff0063 url(images/footer-bg.png) no-repeat scroll right bottom / 100% auto;
+    background-size: 100%;
+}
+
+
+.view-choose-a-kit.view-id-choose_a_kit.view-display-id-page {
+    padding-top: 0px;
+}
+
+.page-choose-a-kit .small_menu ul {
+    margin-top: 10px;
+}
+
+.node-type-page #block-views-the-lab-block h1 {
+    font-size: 24px !important;
+}
+
+.node-type-page #block-views-the-lab-block {
+    padding-top: 0;
+}
+
+.node-type-page.admin-menu .header_bt.container-fluid {
+    padding-top: 0px;
+}
+
+.node-type-product .main-content {
+    margin-top: 0px;
+}
+
+
+.main-page-slider .main-thumnil .bx-wrapper, .main-page-slider .main-thumnil .bx-wrapper .bx-viewport {
+    height: auto !important;
+}
+
+.node-type-product .region-inner-full {
+    margin: 100px 0 60px;
+}
+
+.node-type-product #block-views-glowing-papertronics-block {
+    padding: 15px 15px 30px;
+}
+
+.bx-wrapper {
+    margin: 0 auto 0px!important;
+}
+
+
+.html.not-front.no-sidebars.page-checkout.page-checkout-complete .content_top1.container-fluid {
+    position: relative;
+    top:0px;
+    margin-top: 0px;
+}
+
+.html.not-front.no-sidebars.page-checkout.page-checkout-complete .content_top1.container-fluid {
+   padding-top: 0px; 
+   padding-left: 15px;
+}
+
+.page-checkout-420 section#block-system-main {
+    text-align: left;
+}
+
+
+
+.html.not-front.no-sidebars.page-checkout.page-checkout-review .content_top1.container-fluid {
+    top: 0px;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+
+.html.not-front.no-sidebars.page-checkout.page-checkout-review section#block-upm-order-compelete-shipping-method-review {
+    padding-left: 10px;
+}
+
+
+#block-upm-order-compelete-shipping-review p, #block-upm-order-compelete-billing-review p, #block-upm-order-compelete-shipping-method-review p {
+    padding-left: 0px; 
+}
+
+#block-upm-order-compelete-shipping-review, #block-upm-order-compelete-shipping-method-review, #block-upm-order-compelete-gift-review {
+    padding-left: 10px;
+}
+
+
+
+.html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
+    top:0;
+  padding-top: 0px; 
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+
+#commerce-checkout-form-checkout {
+    margin-top: 20px;
+}
+
+.node-type-projects .leson-detail .leson-title {
+    font-size: 24px;
+}
+
+.scroll-menu {
+    width: 100%!important;
+    text-align: center;
+}
+
+.scroll-menu li {
+    float: none;
+    display: inline-block;
+}
+
+#learn-item-cart button {
+    left: 30%;
+    /*top: 37px!important;*/
+}
+
+.page-learn-items .header_bt.container-fluid {
+    padding-top: 15px;
+}
+
+.region-footer {
+    background: none;
+}
+
+#block-upm-custom-component-spk-custom-block1 {
+    padding-bottom: 36px;
+}
+
+
+.page-home .main-top-header .small_menu.col-sm-3 {
+    right: 5px;
+    top: -34px;
+}
+
+.page-home .small_menu #block-menu-menu-utilities ul li#search, .small_menu #block-menu-menu-utilities ul li#search {
+    left: 54px;
+    position: absolute;
+    top: 18px;
+}
+
+.page-order-thank-you .related-lern-items .view-content .views-row:nth-of-type(2n) {
+   margin-left: 0%;
+   margin-top: 20px; 
+}
+
+.page-order-thank-you .background-header {
+   margin-bottom: 0px !important;
+}
+
+}
+
+@media (max-width: 400px ){
+    .checkbox:last-child, .radio:last-child {
+        margin-bottom: 10px;
+    }
+
+}
+
+@media (max-width: 340px ){
+    #learn-item-cart button {
+        left: 30%;
+        /*top: 58px!important;*/
+    }
+
+    .page-learn-items #block-block-9 {
+        margin-top: 100px!important;
+    }
+
+    .page-learn-items #block-block-9 {
+        margin-top: 100px!important;
+    }
+
+}
+
+.grant-writing{
+    text-align: center;
+    padding-top: 30px;
+}
+.grant-writing a{
+    color: #fb3c8b;
+    font-weight: 600;
+    text-decoration: underline;
+}
+.grant-writing1 a{
+    color: #fb3c8b;
+    font-weight: 600;
+    text-decoration: underline;
+}
+.grant-writing4{
+    text-decoration: underline;
+}
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  { 
+
+
+    #block-views-learn-item-link-block{
+        width: 100%;
+
+    }
+
+
+    .node-type-product .main-goes-well , body.node-type-product .product-img.p-0,body.node-type-product .product-img-content.p-0{
+        padding: 0px !important;
+    }
+
+
+
+    body.node-type-product .row .col-sm-12{
+        padding-right: 0px !important;
+        padding-left: 0px !important;
+        font-size: 12px;
+    }
+
+    body.node-type-product .product-price.col-sm-2.p-0{
+        font-size: 12px;
+    }
+
+
+
+
+    .node-type-product .region-inner-full.glowing-papertronics-region {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .node-type-product div.view-goes-well-with{
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+
+
+
+
+
+}
+#block-views-glowing-papertronics-block-1 .block-body p, #block-views-glowing-papertronics-block .block-body p, #block-imageblock-2 .block-body p {
+    
+    margin-left: 8px;
+}
+
+
+.page-checkout #commerce-checkout-coupon-ajax-wrapper .commerce_coupon .panel-body #edit-commerce-coupon-coupon-add--2 {
+    position: absolute;
+    right: 15px;
+    bottom: 72px;
+}
+#my-store-locator{
+    display: none;
+}
+@media (max-width: 767px ){
+    #spk-custom-form2.error #msg-newsletter {
+        background: #fff url(images/news-msg.png) no-repeat scroll right 22px top 8px / 24px auto;
+        border-color: #FF0063;
+    }
+    #spk-custom-form2.done #msg-newsletter {
+        border: 2px solid;
+        bottom: 0;
+        padding: 16px 16px 16px 6px;
+        position: absolute;
+        text-align: left !important;
+        width: 100%;
+    }
+    #spk-custom-form2.error #msg-newsletter {
+        border: 2px solid;
+        bottom: 0;
+        padding: 20px 16px 21px 6px;
+        position: absolute;
+        text-align: left !important;
+        width: 100%;
+    }
+
+    #sharethis-buttons-block {
+        float: left;
+        margin-left: 0px;
+        width: 80%;
+        margin-top: 0px;
+    }
+    #my-store-locator{
+        display: block;
+    }
+
+    .product-tags span {
+      
+        font-size: 13px !important;
+    }
+    .node-type-lesson #flippynxtpre ul.flippy {
+        margin-top: 0px !important;
+        
+    }
+    .leson-detail .leson-title {
+      
+        margin-bottom: 5px;
+        
+    }
+    .node-type-lesson .entry-content ul{
+        padding-right: 20px;
+        padding-left: 20px;
+
+    }
+    .field-name-field-bottom-description-body {
+        margin-bottom: 5px;
+    }
+    .commerce_coupon .view-order-coupon-list .table-responsive {
+        float: none;
+        width: 100%;
+    }
+    .page-cart #side-mini-checkout-inner-container {
+        border: 1px solid #35c8b8;
+        padding: 20px 15px 50px;
+        margin-top: 54px;
+        width: 100%;
+    }
+    .page-cart .view-commerce-cart-form .commerce-line-item-views-form form #side-mini-checkout #calculate-tax-form button {
+        right: 0px;
+        position: absolute;
+    }
+
+    #my-store-locator::after{
+        content: '';
+        background-image: url(images/utilities2.png);
+        width: 6%;
+        height: 27px;
+        background-repeat: no-repeat;
+        position: absolute;
+        left: 115px;
+        top: 13px;
+    }
+    .node-type-projects .field-name-field-description-and-more{
+        height: 300px;
+    }
+    .node-type-projects .field-name-field-description-and-more #player{
+        height: 250px;
+    }
+
+
+}
+.views-field-field-teaching-aids-image img{
+    max-width: 572px;
+    width: 100%;
+    height: 322px;
+}
+
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  { 
+
+    .view-teacher-aids-view .views-row {
+        width: 100%;
+        margin-right: 22px;
+    }
+
+}
+
+.view-teacher-aids-view .views-field-field-file{
+
+    text-align: center;
+}
+.view-teacher-aids-view .views-field-field-file .file::after{
+    content: "\f01a";  
+    font-family: FontAwesome;
+    color: #64c5f4; 
+    font-size: 16px;
+
+}
+#block-views-teacher-aids-view-block .views-field-title .field-content a, #block-views-projects-view-block .views-field-title .field-content > a {
+    color: #2e9ef5 !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+}
+#block-views-teacher-aids-view-block .views-field-title .field-content a:hover,#block-views-teacher-aids-view-block .views-field-title .field-content a:focus {
+    
+    text-decoration: none;
+}
+.view-teacher-aids-view .views-field-field-file a:hover,.view-teacher-aids-view .views-field-field-file  a:focus {
+    
+    text-decoration: none;
+}

@@ -1,0 +1,85 @@
+(function ($) {
+// your standard jquery code goes here with $ prefix
+// best used inside a page with inline code,
+// or outside the document ready, enter code here
+
+    $(document).ready(function () {
+      var classes = $(".view-id-commerce_cart_summary").attr('class');
+      if(classes){
+      	var domid = $.grep(classes.split(" "), function(v, i){
+		      return v.indexOf('view-dom-id-') === 0;
+		    }).join();
+      }
+
+		$('textarea[name="commerce_giftwrap[my_gift_block][my_gift_pane_gift_msg]"]').on("blur focusout", function (){
+            var pathname = window.location.pathname;
+			var parts = pathname.split("/");
+			var orderid = parts[parts.length-1];
+			var msg = $('textarea[name="commerce_giftwrap[my_gift_block][my_gift_pane_gift_msg]"]').val();
+			//alert(msg);
+            $.ajax({
+              method: "GET",
+              url: "/checkout/msgupdate",
+              data: { orderid: orderid, msg: msg}
+            })
+        });
+
+		$('#edit-commerce-giftwrap-my-gift-block-my-gift-pane-gift-option .form-item input[type="radio"]').click(function () {
+            var pathname = window.location.pathname;
+			var parts = pathname.split("/");
+			var orderid = parts[parts.length-1];
+			var gwdecision = $('input[name="commerce_giftwrap[my_gift_pane_gift_check]"]').val();
+			var isprice = $(this).val();
+			var msg = $('textarea[name="commerce_giftwrap[my_gift_block][my_gift_pane_gift_msg]"]').val();
+
+            $.ajax({
+              method: "GET",
+              url: "/checkout/giftupdate",
+              data: { orderid: orderid, gwdecision: gwdecision, isprice: isprice, msg: msg},
+            }).done(function( result ) {
+            	$('.'+domid).trigger('views_refresh');
+            });
+        });
+
+        //shipping autoupdate
+        $('fieldset.commerce_shipping_rates .panel-body .form-radios label input[type="radio"]').click(function () {
+            var pathname = window.location.pathname;
+			var parts = pathname.split("/");
+			var orderid = parts[parts.length-1];
+			var shipid = $(this).val();
+            $.ajax({
+              method: "GET",
+              url: "/checkout/shipupdate",
+              data: { orderid: orderid, shipid: shipid},
+            }).done(function( result ) {
+            	$('.'+domid).trigger('views_refresh'); 
+            	
+            });
+        });
+   
+        //zip code update
+        $("#edit-customer-profile-shipping input[id$='-postal-code']").change(function() {
+        	var pathname = window.location.pathname;
+			var parts = pathname.split("/");
+			var orderid = parts[parts.length-1];
+			var zipcode = $(this).val();
+        	$.ajax({
+              method: "GET",
+              url: "/checkout/zipupdate",
+              data: { orderid: orderid, zipcode: zipcode},
+            }).done(function( result ) {
+            	$('.'+domid).trigger('views_refresh');
+            });
+        });
+
+        var base_price = $('.view-id-commerce_cart_summary .component-type-base-price .component-total').text();
+        $( document ).ajaxComplete(function() {
+          $('.tooltip').tooltip('hide');
+        	$('.view-id-commerce_cart_summary .component-type-commerce-price-formatted-amount .component-title').text('Estimated Total');
+        	$('.view-id-commerce_cart_summary .component-type-base-price .component-total').text(base_price);
+		    });
+        $('input[name="commerce_coupon[coupon_code]"]').on("blur focusout", function () {
+          $('.tooltip').tooltip('hide');
+        });
+    });
+})(jQuery);

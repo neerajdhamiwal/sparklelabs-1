@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * Returns an associative array of credit card types.
+ */
+function payment_credit_card_credit_card_types() {
+  return array(
+    'visa' => t('Visa'),
+    'mastercard' => t('MasterCard'),
+    'amex' => t('American Express'),
+    'discover' => t('Discover Card'),
+    'dc' => t("Diners Club"),
+    'dci' => t("Diners Club International"),
+    'cb' => t("Carte Blanche"),
+    'jcb' => t('JCB'),
+    'maestro' => t('Maestro'),
+    'visaelectron' => t('Visa Electron'),
+    'laser' => t('Laser'),
+    'solo' => t('Solo'),
+    'switch' => t('Switch'),
+  );
+}
+
+function payment_credit_card_months() {
+  return array(
+    '01' => t('January'),
+    '02' => t('February'),
+    '03' => t('March'),
+    '04' => t('April'),
+    '05' => t('May'),
+    '06' => t('June'),
+    '07' => t('July'),
+    '08' => t('August'),
+    '09' => t('September'),
+    '10' => t('October'),
+    '11' => t('November'),
+    '12' => t('December'),
+  );
+}

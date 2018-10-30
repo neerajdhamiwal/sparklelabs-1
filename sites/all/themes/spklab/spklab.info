@@ -1,0 +1,54 @@
+name = SPKLAB
+description = This is Spklab theme by using bootstrap sub theme.
+core = 7.x
+base theme = bootstrap
+
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Regions
+;;;;;;;;;;;;;;;;;;;;;
+
+regions[promo_area]     = 'Promo area code'
+regions[logo]           = 'Logo'
+regions[navigation]     = 'Navigation'
+regions[small_menu]     = 'Small Menu'
+regions[banner]         = 'Banner'
+regions[header_bt]      = 'Header Bottom'
+regions[content_top1]   = 'Content Top 1'
+regions[content_top2]   = 'Content Top 2'
+regions[header]         = 'Top Bar'
+regions[highlighted]    = 'Highlighted'
+regions[help]           = 'Help'
+regions[content]        = 'Content'
+regions[content_bottom] = 'Content Bottom'
+regions[content_bottom2]    = 'Content bottom 2'
+regions[sidebar_first]  = 'Primary'
+regions[sidebar_second] = 'Secondary'
+regions[footer]         = 'Footer'
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Stylesheets
+;;;;;;;;;;;;;;;;;;;;;
+
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/newstyle.css
+stylesheets[all][] = css/jquery.bxslider.css
+stylesheets[all][] = css/owl.carousel-theme.css
+stylesheets[all][] = css/owl.carousel.css
+stylesheets[all][] = css/colors.css
+stylesheets[all][] = css/ibmtype.css
+stylesheets[all][] = css/customstyle.css
+stylesheets[all][] = css/dev.css
+
+scripts[] = js/jquery.bxslider.js
+scripts[] = js/jquery.bxslider.min.js
+scripts[] = js/jquery.easing.1.3.js
+scripts[] = js/jquery.fitvids.js
+scripts[] = js/owl.carousel.min.js
+scripts[] = js/query.js
+scripts[] = js/autoupdates.js
+scripts[] = js/jquery.zoom.js
+scripts[] = js/jquery.zoom.js
+scripts[] = js/jquery.cookie.js
+
+settings[opacity] = 0.5

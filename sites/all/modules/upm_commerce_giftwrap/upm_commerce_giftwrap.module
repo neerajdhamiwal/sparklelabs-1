@@ -1,0 +1,148 @@
+<?php
+/**
+ * @file
+ * This module adds a new checkout pane with configuration settings to allow
+ * users to select a gift wrapping option to add to their order. Store owners
+ * can set a price for gift wrapping and add some additional information about
+ * the service.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function upm_commerce_giftwrap_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#upm_commerce_giftwrap':
+      return t('This module provides a checkout pane for users to select if they
+        would like their order gift wrapping. Settings for the gift wrapping can
+        be found in the checkout settings page at
+        Store > Configuration > Checkout Settings.');
+  }
+}
+
+
+/**
+ * Implements hook_commerce_line_item_type_info().
+ */
+function upm_commerce_giftwrap_commerce_line_item_type_info() {
+  return array(
+    'giftwrap' => array(
+      'type' => 'giftwrap',
+      'name' => t('Gift Wrap'),
+      'description' => t('Line item for gift wrapping.'),
+      'add_form_submit_value' => t('Add Gift Wrapping'),
+      'base' => 'upm_commerce_giftwrap_line_item',
+      'callbacks' => array(
+        'configuration' => 'upm_commerce_giftwrap_configure_line_item',
+      ),
+    ),
+  );
+}
+
+/**
+ * Function called by the line item module when it or this module is enabled.
+ */
+function upm_commerce_giftwrap_configure_line_item() {
+
+}
+
+/**
+ * Implements hook_commerce_checkout_pane_info().
+ */
+function upm_commerce_giftwrap_commerce_checkout_pane_info() {
+  $panes['commerce_giftwrap'] = array(
+    'title' => t('Gift Wrapping'),
+    'page' => 'checkout',
+    'weight' => 10,
+    'file' => 'upm_commerce_giftwrap_checkout_pane.inc',
+    'base' => 'upm_commerce_giftwrap_pane',
+  );
+  return $panes;
+}
+
+/**
+ * Implements hook_commerce_price_component_type_info().
+ */
+function upm_commerce_giftwrap_commerce_price_component_type_info() {
+  return array(
+    'giftwrap' => array(
+      'title' => t('Gift Wrapping'),
+      'weight' => -40,
+    ),
+  );
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function upm_commerce_giftwrap_form_commerce_checkout_pane_settings_form_alter(&$form, &$form_values, $form_id) {
+  if($form['checkout_pane']['#value']['base'] == 'upm_commerce_giftwrap_pane') {
+    $form['submit']['#submit'][] = 'upm_commerce_giftwrap_pane_settings_form_submit';
+  }
+}
+
+/**
+ * Deletes all giftwrap line items on an order.
+ *
+ * @param object $order
+ *   The order object to delete the giftwrap line items from.
+ */
+function upm_commerce_giftwrap_delete_giftwrap_line_items($order) {
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  $line_item_id = NULL;
+  foreach ($order_wrapper->commerce_line_items as $delta => $line_item_wrapper) {
+    // If this line item is a giftwrap line item...
+    if ($line_item_wrapper->type->value() == 'giftwrap') {
+      // Store its ID for later deletion and remove the reference from the line
+      // item reference field.
+      $line_item_id = $line_item_wrapper->line_item_id->value();
+      $order_wrapper->commerce_line_items->offsetUnset($delta);
+      break;
+    }
+  }
+  // If we found any giftwrap line items...
+  if (!empty($line_item_id)) {
+    // First save the order to update the line item reference field value.
+    commerce_order_save($order);
+    // Then delete the line items.
+    commerce_line_item_delete($line_item_id);
+  }
+}
+
+/**
+ * Checks if an order contains a giftwrap line item.
+ *
+ * @param object $order
+ *   The order object to check for a giftwrap line item.
+ *
+ * @return bool
+ *   TRUE if the order contains a giftwrap line item.
+ */
+//function upm_commerce_giftwrap_line_item_exists($order) {
+//  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+//  foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+//    // If this line item is a giftwrap line item...
+//    if ($line_item_wrapper->type->value() == 'giftwrap') {
+//      return TRUE;
+//    }
+//  }
+//}
+
+/**
+ * Gets the giftwrap line item ID for a specific order.
+ *
+ * @param object $order
+ *   The order object to get the giftwrap line item ID of.
+ *
+ * @return int
+ *   The ID of the giftwrap line item attached to this order.
+ */
+function upm_commerce_giftwrap_get_line_item_id($order) {
+  $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
+  foreach ($order_wrapper->commerce_line_items as $line_item_wrapper) {
+    // If this line item is a giftwrap line item...
+    if ($line_item_wrapper->type->value() == 'giftwrap') {
+      return $line_item_wrapper->line_item_id->value();
+    }
+  }
+}

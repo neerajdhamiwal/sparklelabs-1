@@ -1,0 +1,76 @@
+<?php
+/**
+ * @file
+ * Provides hooks for installation and uninstallation for the Commerce Shipping
+ * module.
+ */
+
+ /**
+  * Implementation of hook_install().
+  */
+
+
+function upm_commerce_shipping_install() {
+   // Use schema API to create database table.
+   drupal_install_schema('shipping_rates');
+}
+
+/**
+ * Implements hook_enable().
+ */
+
+
+function upm_commerce_shipping_enable() {
+  commerce_product_line_item_configuration('shipping_rates');
+}
+
+
+/**
+ * Implements of hook_uninstall().
+ */
+
+
+function upm_commerce_shipping_uninstall() {
+
+  // Remove tables.
+  drupal_uninstall_schema('shipping_options');
+
+
+  module_load_include('module', 'commerce');
+  // Delete any field instance attached to a shipping line item.
+  commerce_delete_instances('commerce_line_item', 'shipping_rates');
+}
+
+
+function upm_commerce_shipping_schema() {
+    $schema['shipping_options'] = array(
+        'description' => 'The base table for Shipping options.',
+        'fields' => array(
+            'id' => array(
+                'description' => 'entity id',
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE),
+            'label' => array(
+                'description' => 'Shipping option label.',
+                'type' => 'varchar',
+                'length' => 60,
+                'not null' => TRUE,
+                'default' => 0),
+            'rate' => array(
+                'description' => 'Shipping option rates.',
+                'type' => 'varchar',
+                'length' => 5,
+                'not null' => TRUE,
+                'default' => ''),
+            'type' => array(
+                 'description' => 'Shipping option type.',
+                 'type' => 'varchar',
+                 'length' => 15,
+                 'not null' => TRUE,
+                 'default' => ''),
+        ),
+        'primary key' => array('id'),
+    );
+    return $schema;
+}

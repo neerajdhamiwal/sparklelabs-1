@@ -1,0 +1,4 @@
+name = UPM Custom Component
+description = Ultimate Programming Machine.
+package = UPM
+core = 7.x

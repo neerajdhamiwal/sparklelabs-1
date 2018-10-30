@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * @file
+ * Default theme implementation to format the simplenews newsletter body.
+ *
+ * Copy this file in your theme directory to create a custom themed body.
+ * Rename it to override it. Available templates:
+ *   simplenews-newsletter-body--[tid].tpl.php
+ *   simplenews-newsletter-body--[view mode].tpl.php
+ *   simplenews-newsletter-body--[tid]--[view mode].tpl.php
+ * See README.txt for more details.
+ *
+ * Available variables:
+ * - $build: Array as expected by render()
+ * - $build['#node']: The $node object
+ * - $title: Node title
+ * - $language: Language code
+ * - $view_mode: Active view mode
+ * - $simplenews_theme: Contains the path to the configured mail theme.
+ * - $simplenews_subscriber: The subscriber for which the newsletter is built.
+ *   Note that depending on the used caching strategy, the generated body might
+ *   be used for multiple subscribers. If you created personalized newsletters
+ *   and can't use tokens for that, make sure to disable caching or write a
+ *   custom caching strategy implemention.
+ *
+ * @see template_preprocess_simplenews_newsletter_body()
+ */
+if($build['#node']->field_product_specific_newslette['und'][0]['value'] != 1)
+//If not a product specofic newsletter following template will be executed.
+{
+?>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="color: #4d4d4d;font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;font-size: 14px;font-weight: 300;line-height: 18px; margin:50px auto 0; max-width:800px;">
+        <tr>
+            <th>
+              <table border="0" cellpadding="0" cellspacing="0"  style="">
+                <tr>
+                  <th>
+                        <table border="0" cellpadding="0" cellspacing="0"  style=" margin:0 0 0;  text-align: left;">
+                          <thead>
+                          <tr>
+                            <th><img src="http://sparklelabs.opensenselabs.com/sites/all/themes/spklab/images/sl_logo_knockout.png" style="background-color:#34C8B6; margin-top: 30px; margin-bottom: 15px;"></th>
+                          </tr>
+                          <tr>
+                          <tr>
+                            <th style="font-size: 19px; line-height: 28px; font-weight: normal;  ">
+                              There is new content for <strong><?php print $build['#node']->field_simplenews_term['und'][0]['taxonomy_term']->name; ?></strong>.
+
+                            </th>
+                          </tr>
+                          </tr>
+                        </thead>
+                      </table>
+
+
+                      <table border="0" cellpadding="0" cellspacing="0"  style=" margin:20px 0 0; width:100%; text-align: left;">
+                        <tr>
+                          <th>
+                            <img src="<?php print file_create_url($build['#node']->field_newsletter_image['und'][0]['uri']); ?>" style=" width:100%;">
+                          </th>
+                        </tr>
+                      </table>
+
+
+                      <table border="0" cellpadding="0" cellspacing="0"  style=" margin:20px 0 0; width:100%; text-align: left;">
+                        <tr>
+                          <th>
+                            <h2 style="font-size:25px; font-weight:300;"><?php print $build['#node']->title; ?></h2>
+                            <div style="font-weight: 300; text-align: justify; line-height: 24px;"><?php print substr($build['#node']->body['und'][0]['value'], 0, 500); ?></div>
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="vertical-align: top;" ><a href="<?php print $build['#node']->field_learn_url['und'][0]['url'] ."?utm_source=email-traffic&utm_medium=follow-a-kit"; ?>" style=" margin-top:15px; max-width:400px; width:100%; border-radius:6px; background-color: #34C8B6;color: #fff;padding: 16px 28px;display: block;font-size: 16px;text-align: center; text-decoration: none;">Read More</a></th>
+
+                        </tr>
+                      </table>
+
+                      <table border="0" cellpadding="0" cellspacing="0"  style=" margin:30px 0 0; width:100%; text-align: left; padding: 140px 60px 50px; background:url(http://sparklelabs.opensenselabs.com/sites/all/themes/spklab/images/placeholder.png) center no-repeat;">
+                          <tr>
+                           <th>
+                            <p style="font-weight: normal; text-align: justify;">This is a standard paragraph. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. <strong>Ut enim ad minim veniam,</strong> quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                           </th>
+                         </tr>
+                       </table>
+
+
+
+                </th>
+                </tr>
+              </table>
+
+          </th>
+        </tr>
+    </table>
+
+<?php } else { ?>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="text-align: left; color: #4d4d4d;font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;font-size: 14px;font-weight: 300;line-height: 18px; margin:50px auto 0; max-width:800px;">
+        <tr>
+            <th>
+              <table border="0" cellpadding="0" cellspacing="0"  style="">
+                <tr>
+                  <th>
+                        <table border="0" cellpadding="0" cellspacing="0"  style=" margin:0 0 0;  text-align: left;">
+                          <thead>
+                          <tr>
+                            <th><img src="http://sparklelabs.opensenselabs.com/sites/all/themes/spklab/images/sl_logo_knockout.png" style="background-color:#34C8B6; margin-top: 30px; margin-bottom: 15px;"></th>
+                          </tr>
+                        </thead>
+                      </table>
+<?php
+print render($build['body']);
+?>
+
+
+                </th>
+                </tr>
+              </table>
+
+          </th>
+        </tr>
+    </table>
+
+<?php 
+}
+?>
+

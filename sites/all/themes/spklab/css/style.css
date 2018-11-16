@@ -826,7 +826,6 @@ ul.quicktabs-tabs li a:hover , ul.quicktabs-tabs li.active a{
 }
 
 .small_menu ul #cart {
-  /* background-position: -30px 0; */
     width: 30px;
     background: rgba(0, 0, 0, 0) url(images/shoppingCart.svg) no-repeat;
     cursor: pointer;
@@ -835,6 +834,7 @@ ul.quicktabs-tabs li a:hover , ul.quicktabs-tabs li.active a{
     font-size: 0;
     height: 38px;
     margin-left: 15px;
+    background-position: 0px 2px;
 }
 
 .small_menu ul #search {
@@ -847,6 +847,7 @@ ul.quicktabs-tabs li a:hover , ul.quicktabs-tabs li.active a{
     font-size: 0;
     height: 38px;
     margin-left: 15px;
+    background-position: 0 2px;
 }
 
 .page-cart .small_menu ul #cart {
@@ -854,7 +855,7 @@ ul.quicktabs-tabs li a:hover , ul.quicktabs-tabs li.active a{
    width: 30px;
 }
 
-.page-cart .small_menu ul #cart.active-trail{background-position:-31px center;}
+.page-cart .small_menu ul #cart.active-trail{background-position:-31px top;}
 .page-cart .small_menu ul #cart.active-trail .count-containor {
   background: #eb008b none repeat scroll 0 0;
   margin-top: -14px;
@@ -2140,7 +2141,7 @@ ul.nav.main-ver-slider li{
 }
 .view-id-choose_a_kit .views-field-title{
     text-align: center;
-    
+
     font-size: 1.1em;
     font-weight: 400;
     /*margin-bottom: .3em;*/
@@ -2428,7 +2429,7 @@ footer.footer  #block-menu-menu-social-menu {
 .html.not-front #block-search-form  {
 
     top: 72px;
-    
+
 }
 .show-search #block-search-form {
     height: 70px;
@@ -4993,10 +4994,16 @@ p iframe {
     } */
 }
 
+.bx-wrapper .bx-pager{
+  margin-bottom: 2px;
+}
 
 
 @media (max-width:767px){
 
+    body.node-type-product .row .main-page-slider.col-sm-12 {
+        margin-bottom: 20px;
+    }
     .commerce-credit-card-expiration{
         clear: both;
     }
@@ -5384,7 +5391,7 @@ button.navbar-toggle span{
 
 
 }
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  { 
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  {
 #block-views-the-lab-block {
     padding-left: 15px !important;
     padding-right: 15px !important;
@@ -5443,7 +5450,7 @@ button.navbar-toggle span{
 
 
 
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) { 
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
 
 .empty-cart.page-cart #cart-view-main {
     float: left;
@@ -5507,7 +5514,7 @@ position: relative;
 
 .view-all-projects-the-lab .project-main:hover .title {
     background: #1fd900 none repeat scroll 0 0;
-    
+
     color: #f0ff00;
 }
 
@@ -5546,7 +5553,7 @@ position: relative;
     .myopacitybox {
 
         height: 57px;
-        
+
     }
 }
 
@@ -5659,8 +5666,8 @@ position: relative;
 
     .myopacitybox{
 
-        height: 57px !important; 
-        
+        height: 57px !important;
+
 
 
     }
@@ -5715,7 +5722,7 @@ position: relative;
     margin-left: 12px;
     margin-right: 12px;
 
-} 
+}
 
 
 #myEmailModal .modal-footer .btn-primary{
@@ -5806,7 +5813,7 @@ position: relative;
 
 
 
-#fbshare , #tweetshare , #pinshare , #emailshare{ 
+#fbshare , #tweetshare , #pinshare , #emailshare{
     border: 1px solid;
     padding-top: 10px;
     padding-bottom: 6px;
@@ -5981,7 +5988,7 @@ position: relative;
 .shareflex div a:focus {
     outline: none !important;
     text-decoration: none;
-    
+
 }
 
 .shareflex #fbshare a:focus{
@@ -6015,7 +6022,7 @@ position: relative;
         margin-top: 22px;
     }
     /*.hideshare {
-        
+
         top: 0px;
         left: 0px;
         }*/
@@ -6061,7 +6068,7 @@ position: relative;
 
 
     .collapse {
-     display: none; 
+     display: none;
  }
  .touchbox {
 
@@ -6196,7 +6203,7 @@ footer.footer #block-menu-menu-social-menu {
     }
 
     .collapse {
-     display: none; 
+     display: none;
  }
 /*footer.footer #block-menu-menu-social-menu {
     padding-top: 10px !important;
@@ -6294,15 +6301,15 @@ footer.footer #block-menu-menu-social-menu {
 }
 
 #edit-commerce-giftwrap .panel-body #edit-commerce-giftwrap-my-gift-block .panel-body .form-type-textarea.form-group .form-textarea-wrapper textarea:-moz-placeholder { /* Firefox 18- */
-    color: #2D9EF2;  
+    color: #2D9EF2;
 }
 
 #edit-commerce-giftwrap .panel-body #edit-commerce-giftwrap-my-gift-block .panel-body .form-type-textarea.form-group .form-textarea-wrapper textarea::-moz-placeholder {  /* Firefox 19+ */
-    color: #2D9EF2;  
+    color: #2D9EF2;
 }
 
 #edit-commerce-giftwrap .panel-body #edit-commerce-giftwrap-my-gift-block .panel-body .form-type-textarea.form-group .form-textarea-wrapper textarea:-ms-input-placeholder {
-    color: #2D9EF2;  
+    color: #2D9EF2;
 }
 
 #commerce-checkout-form-checkout .cart_contents.panel.panel-default.form-wrapper
@@ -6501,7 +6508,7 @@ width: 205px;
     }
 
     #edit-customer-profile-billing legend.panel-heading, #edit-customer-profile-shipping legend.panel-heading, #edit-commerce-shipping-rates  legend.panel-heading{
-     border-color: #bfbfbf;  
+     border-color: #bfbfbf;
  }
 
 
@@ -6554,7 +6561,7 @@ width: 205px;
 }
 
 
-.page-checkout #edit-cart-contents .panel-body .view-footer .table-responsive table tbody tr.component-type-commerce-price-formatted-amount .component-total 
+.page-checkout #edit-cart-contents .panel-body .view-footer .table-responsive table tbody tr.component-type-commerce-price-formatted-amount .component-total
 {
     color: black;
 }
@@ -6602,7 +6609,7 @@ width: 205px;
     font-size: 18px;
     margin-bottom: 12px;
     margin-top: 30px;
-    font-weight: 600; 
+    font-weight: 600;
 }
 
 #custom-ecimg span {
@@ -6692,15 +6699,15 @@ width: 205px;
 
 }
 
-@media only screen and (min-device-width : 875px) and (max-device-width : 1024px)  { 
+@media only screen and (min-device-width : 875px) and (max-device-width : 1024px)  {
   footer.footer {
       background: url(images/footer-bg.png) no-repeat scroll center 220px/auto 158px #ff0063 !important;
       background-size: 100%;
-  }  
+  }
 
 }
 
-@media only screen and (min-device-width : 768px) and (max-device-width : 874px)  {  
+@media only screen and (min-device-width : 768px) and (max-device-width : 874px)  {
   footer.footer {
       background: url(images/footer-bg.png) no-repeat scroll center 340px/auto 130px #ff0063 !important;
       background-size: 100%;
@@ -6775,7 +6782,7 @@ footer.footer .block-title {
         float: right;
         /*min-height: 125px;*/
     }
-    @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  { 
+    @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  {
         #edit-my-module .panel-body .form-item.form-item-my-module-my-module-pane-news-check.form-type-checkbox.checkbox {
 
             bottom: 5px;
@@ -6789,7 +6796,7 @@ footer.footer .block-title {
             top: 25px;
             left: 20px;
             display: inline-block;
-            
+
             margin-top: 22px;
         }
     }
@@ -6839,13 +6846,13 @@ footer.footer .block-title {
 @media only screen and (min-device-width : 768px) and (max-device-width : 853px) {
 footer.footer #block-menu-menu-social-menu {
     bottom: 75px;
-}  
+}
 }
 
 @media only screen and (min-device-width : 1024px) {
 .region-footer {
     height: 340px;
-}    
+}
 }
 
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
@@ -6927,7 +6934,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
         z-index: 999;
         left: -30px;
     }
-    .not-front #navbar-collapse{ 
+    .not-front #navbar-collapse{
         margin-left: 70px;
     }
     .html.not-front #block-search-form {
@@ -7012,7 +7019,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
         width: 325px;
 
         height: auto;
-        
+
     }
 }
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation : landscape )  {
@@ -7022,7 +7029,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
 
         right: -32px;
         top: 25px !important;
-        
+
     }
     .html.not-front #block-menu-menu-utilities {
         position: relative;
@@ -7043,7 +7050,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
 
         right: -22px;
         top: 58px;
-        
+
     }
 
 
@@ -7205,7 +7212,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
     left: 17px;
     display: block;
     margin-top: 22px;
-  
+
     position: relative;
     top: 25px;
     left: 119px;
@@ -7233,7 +7240,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
     .page-node-243 .whitebox{
 
         position: absolute;
-        
+
         bottom: 95px;
         color: white;
 
@@ -7441,7 +7448,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
     color: white;
     margin-right: 0px;
     width: 50%;
-    padding: 0px 15px;    
+    padding: 0px 15px;
 }
 
 .eduwebform   .form-item label{
@@ -7510,7 +7517,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
     left: 0;
     right: 0;
     bottom: 0;
-    
+
     color: #ffd400;
     height: 93px;
     width: 500px;
@@ -7729,11 +7736,11 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
         width: auto;
     }
     .getdis {
-       padding-right: 15px; 
+       padding-right: 15px;
    }
    .whitebox h3 {
     font-size: 30px !important;
-    letter-spacing: 0px !important; 
+    letter-spacing: 0px !important;
     line-height: 50.75px !important;
     padding-left: 20px !important;
 }
@@ -7744,7 +7751,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
     padding-right: 16px;
 }
 .productslide {
-   padding-left: 15px; 
+   padding-left: 15px;
 }
 #widget_pager_bottom_productslider-block {
     position: relative;
@@ -7756,7 +7763,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
 }
 .educatorblock .block-title {
     font-size: 40px !important;
-    
+
 }
 .eduproductname {
 
@@ -7782,12 +7789,12 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
 }
 .eduwebform .form-item.webform-component--first-name {
     width: 100%;
-    
+
     margin-right: 0px;
 }
 .eduwebform .form-item.webform-component--last-name {
     width: 100%;
-    
+
 }
 .eduwebform .form-item.webform-component-email {
     width: 100%;
@@ -7819,10 +7826,10 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
 }
 
 .block4edu {
-    padding-right: 15px; 
+    padding-right: 15px;
 }
 .getintouch {
-   padding-left: 15px; 
+   padding-left: 15px;
 }
 }
 .html.not-front.node-type-page .slick-dots{
@@ -8118,7 +8125,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
 .page-order-thank-you .shareitblock div[id*="wrapper"] {
     margin-right: 0rem;
     margin-left: 0em;
-    
+
 }
 .page-order-thank-you .shareitblock div[id*="wrapper"] {
     margin-top: -1px;
@@ -8285,7 +8292,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
     }
 
 }
-.line-item-summary-checkout.last a::after { 
+.line-item-summary-checkout.last a::after {
  font-family: FontAwesome;
  content: "\f0da";
  padding-left: 5px;
@@ -8307,7 +8314,7 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
 @media (max-width:767px){
 
    .page-blogs #block-upm-custom-component-custom-referer {
-       display: block; 
+       display: block;
    }
 
    .inline-price {
@@ -8346,8 +8353,8 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
       padding-bottom: 15px;
       padding-left: 15px;
       padding-right: 15px;
-  }    
-    
+  }
+
 }
 
 .page-learn-items .scroll-menu li.change-me a {
@@ -8391,13 +8398,13 @@ html.not-front.no-sidebars.page-checkout .content_top1.container-fluid {
 .node-type-projects #block-views-glowing-papertronics-block .block-body h2{
     font-weight: 600;
 }
-#block-block-16 h4::after { 
+#block-block-16 h4::after {
  font-family: FontAwesome;
  content: "\f003";
  padding-left: 5px;
 }
 .page-checkout .cart-edit-btn-summary.pull-right{
-    display: block; 
+    display: block;
     font-weight: bold;
     position: relative;
     top: -11px;
@@ -8443,9 +8450,9 @@ background: #ffd400;
 .field-name-field-source-code.field-type-geshifield {
     position: relative;
 }
- 
+
 #block-menu-menu-utilities #cart-popup-main, #block-commerce-popup-cart-commerce-popup-cart .cart-icon, #block-commerce-popup-cart-commerce-popup-cart .cart_popup_count p {
-    font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; 
+    font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .node-type-product .views-field-title , .node-type-product .views-field-field-project-subtitle ,.node-type-product .views-field-body{
@@ -8480,7 +8487,7 @@ margin-left: 20px;
 }
 .page-checkout-review #block-upm-order-compelete-cart-content-review .view-id-commerce_cart_summary{
      padding-right: 20px;
-    padding-left: 20px; 
+    padding-left: 20px;
     border-bottom: 1px dashed #35c8b8;
 
 }
@@ -8500,7 +8507,7 @@ margin-left: 20px;
     color: #7f7f7f;
 }
 .page-cart  .commerce_coupon .view-order-coupon-list .table-responsive {
-   
+
     bottom: 15px;
    }
    .node-lesson.node-promoted .flippy li a {
@@ -8550,7 +8557,7 @@ margin-left: 20px;
     text-align: right;
     margin: 0px;
     padding-left: 30px;
-  
+
 
 }
 .previous-title , .next-title{
@@ -8720,7 +8727,7 @@ display: block !important;
 
 
 .node-lesson.node-promoted .flippy {
- 
+
     padding-bottom: 45px !important;
 }
 
@@ -8842,8 +8849,8 @@ display: block !important;
   }
   #block-menu-menu-products {
       width: 21%;
-  }  
-  
+  }
+
 }
 
 .node-type-blog #block-upm-custom-component-spk-custom-block1 {
@@ -8862,7 +8869,7 @@ display: block !important;
 }
 .page-learn-items .views-field-field-file a {
     color: white !important;
-   
+
 }
 #block-views-teacher-aids-view-block .views-row{
     position: relative;
@@ -9005,15 +9012,6 @@ text-align: center;
     width: 380px;
     float: none;
     /* min-height: 125px; */
-  } 
+  }
 }
 /*---------------------Custom CSS New-----------------*/
-
-
-
-
-
-
-
-
-
